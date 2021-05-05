@@ -1,14 +1,17 @@
 #!/bin/sh
 #
-# USAGE: verify.sh <model_file> <property_file> property1 property2 ...
-#   or   cat properties.txt | xargs verify.sh <model_file> <property_file>
-model_file=${1}
-property_file=${2}
-combined="combined_${model_file}"
-shift 2
+# USAGE: verify.sh <cwp_class_file> <bpmn_file> <cwp_state_file> property1 property2 ...
+#   or   cat properties.txt | xargs verify.sh <bpmn_file> <property_file>
+
+cwp_class_file=${1}
+bpmn_file=${2}
+cwp_state_file=${3}
+combined="combined_${bpmn_file}"
+shift 3
 rm ${combined}
-cat ${model_file} >& ${combined}
-cat ${property_file} >> ${combined}
+cat ${cwp_class_file} >& ${combined}
+cat ${bpmn_file} >> ${combined}
+cat ${cwp_state_file} >> ${combined}
 # echo "$file"
 # echo "$@"
 for i in "$@"
