@@ -6,8 +6,32 @@
 \usepackage{amsfonts}
 \usepackage{url}
 \usepackage{comment}
-\hyphenation{op-tical net-works semi-conduc-tor}
+\usepackage{listings}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{light-gray}{gray}{0.88}
+
+\lstdefinestyle{myPromela}
+{frame=none,
+  basicstyle=\ttfamily,
+  language=Promela,
+  aboveskip=1mm,
+  belowskip=1mm,
+  showstringspaces=false,
+  columns=flexible,
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=false,
+  breakatwhitespace=true,
+  tabsize=2,
+  linewidth=2\linewidth
+}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
 
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
 
@@ -55,28 +79,11 @@ Seatle, Washington}
 % \section{Introduction}
 % \input{intro}
 
-% \section{Simple Example}
-% \input{example}
+\section{Conceptual Work Problem}
+\input{cwp}
 
-% \section{System Model and Semantics}
-% \input{system}
-
-% \section{Contiguity Types}
-% \input{contig} 
-
-% \section{Filters}
-% \input{filters}
-
-% \section{Monitors}
-% \input{monitors}
-
-% \section{OSATE Integration for AADL}
-% \input{aadl-agree-osate}
-
-% \section{Related Work}
-% \input{related-work}
-% \section{Conclusion}
-% \input{conclusion}
+\section{Environment Model}
+\input{env}
 
 % An example of a double column floating figure using two subfigures.
 % (The subfig.sty package must be loaded for this to work.)

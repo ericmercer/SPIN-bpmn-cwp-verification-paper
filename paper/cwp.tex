@@ -1,0 +1,29 @@
+A CWP is a declarative specification of a complex object of work that is shared by activities in a distributed cognitive system. It makes clear the allowed transformations by the distributed activities to move the object from some initial state to a goal state. The specification provides a connection between human cognition and the design of software.
+
+There are two parts to a CWP: the data defining the state of the object and a state chart showing the allowed transitions between the object states from some initial state to an eventual goal state. These are both introduced and discussed in the context of the remote patient care problem. 
+
+\subsection{Object State and Behavior}
+The object state for remote patient care is the data for assessing patient risk while in home care. The state adapts Medicare’s 4-point severity-of-illness DRG ratings to represent the severity level of outpatient condition and their needed level of care [19, 20]. The ratings represent a composite of CDC’s Interim Guidance for COVID-19 home care [46]. The adaptation here intends to capture the actionable risk awareness of a patient while in home care in a computationally independent model.
+
+The object state is defined by the physician orders (\texttt{orders}), the actual severity of the patient on the 4-point scale (\texttt{severity}), the level of care the patient is able to maintain from themselves or a care giver while at home (\texttt{careCapability}), and the tending severity conjectured from data remotely being monitored between exams (\texttt{trendSeverity}). The orders are modeled with an enumerated type in Promela.
+%
+{\small
+\begin{lstlisting}[style=myPromela]
+mtype = {homeCare, hospital, discharge}
+mtype orders = homeCare
+\end{lstlisting}
+}
+%
+\noindent The enumeration values have their intuitive meaning for the prescribed intervention. Initial values are based on the state chart in the next section.\footnote{Initial values do affect the correctness of the model and each possible initial object state is verified required by the state chart definition.}
+
+The patient severity, care capability, and trending severity are modeled as bytes since the have a limited range based on a 4-point scale.
+%
+{\small
+\begin{lstlisting}[style=myPromela]
+byte severity = 0
+byte careCapability = 2
+byte trendSeverity = 0
+\end{lstlisting}
+}
+%
+\noindent The initial \texttt{careCapability} value is set at the point where the patient requires admission to the hospital according to the DRG ratings. It is a constant value and does not change in the model.

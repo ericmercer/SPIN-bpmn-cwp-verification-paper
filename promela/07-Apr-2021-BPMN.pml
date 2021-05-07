@@ -1,4 +1,99 @@
 /*****************************************************************************/
+/*                                   Alert                                   */
+/*****************************************************************************/
+bool alert = false
+
+#define isAlert(alert) (alert == true)
+
+#define setAlert(alert) alert = true
+
+#define clearAlert(alert) alert = false
+
+inline logAlert(alert) {
+  printf("alert = %d\n", alert)
+}
+
+/*****************************************************************************/
+/*                          Behavior Model Alert                             */
+/*****************************************************************************/
+inline updateAlert(alert) {
+  if
+  :: true -> setAlert(alert)
+  :: true
+  fi
+
+  logAlert(alert)
+}
+
+/*****************************************************************************/
+/*                                Exam Type                                  */
+/*****************************************************************************/
+mtype = {routine, urgent}
+mtype examType = routine
+
+#define isExamTypeRoutine(type) (type == routine)
+
+#define setExamTypeRoutine(type) type = routine
+
+#define isExamTypeUrgent(type) (type == urgent)
+
+#define setExamTypeUrgent(type) type = urgent
+
+inline logExamType(type) {
+  printf("examType = %e\n", type)
+}
+
+/*****************************************************************************/
+/*                       Behavior Model for Exam Type                        */
+/*****************************************************************************/
+inline updateExamType(trendSeverity, examType) {
+  clearAlert(alert)
+  if
+  :: (isExamTypeRoutine(examType) && !isWithinCareCapability(trendSeverity)) ->
+    if
+    :: true -> setExamTypeUrgent(examType)
+    :: true
+    fi
+  :: else
+  fi
+  logExamType(examType)
+}
+
+/*****************************************************************************/
+/*                                Exam Time                                  */
+/*****************************************************************************/
+mtype = {now, unscheduled, scheduled}
+mtype examTime = unscheduled
+
+#define isExamTimeNow(time) (time == now)
+
+#define setExamTimeNow(time) time = now
+
+#define isExamTimeUnscheduled(time) (time == unscheduled)
+
+#define setExamTimeUnscheduled(time) time = unscheduled
+
+#define isExamTimeScheduled(time) (time == scheduled)
+
+#define setExamTimeScheduled(time) time = scheduled
+
+inline logExamTime(time) {
+  printf("examTime = %e\n", time)
+}
+
+/*****************************************************************************/
+/*                       Behavior Model for Exam Time                        */
+/*****************************************************************************/
+inline setExamTimeIfScheduled(time) {
+  if
+  :: isExamTimeScheduled(time) ->
+    setExamTimeNow(time)
+  :: true
+  fi
+  logExamTime(time)
+}
+
+/*****************************************************************************/
 /*                         Clinician Flow Places                             */
 /*****************************************************************************/
 bit clinicianEnd61 = 0
@@ -134,7 +229,7 @@ active proctype clinician() {
     atomic {
       consumeToken(clinicianTask07a)
       printf("07a- Doc-Nurse review alert, vitals and exam schedule\n")
-      updateExamType(alert, trendSeverity, severity, examType)
+      updateExamType(trendSeverity, examType)
       setExamTimeIfScheduled(examTime)
       putToken(clinicianXor9)
     }
@@ -142,7 +237,7 @@ active proctype clinician() {
     atomic {
       consumeToken(clinicianTask07b)
       printf("07b- Doc-Nurse review vitals and exam schedule\n")
-      updateExamType(alert, trendSeverity, severity, examType)
+      updateExamType(trendSeverity, examType)
       setExamTimeIfScheduled(examTime)
       putToken(clinicianXor10)
     }
@@ -292,7 +387,8 @@ active proctype homeCareFlow() {
       consumeToken(homeCareFlowTask05In01)
       printf("05- Pt or care-giver follow order to record vitals\n")
       updatePatientMortality(trendSeverity, severity)
-      updateSeverityTrendAndAlert(alert, trendSeverity, severity)
+      updateSeverityTrend(trendSeverity)
+      updateAlert(alert)
       putToken(clinicianRecv01Vitals)
       putToken(homeCareFlowXor6)
     }

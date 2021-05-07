@@ -58,80 +58,6 @@ inline logTrend(trendSeverity) {
 }
 
 /*****************************************************************************/
-/*                                   Alert                                   */
-/*****************************************************************************/
-bool alert = false
-
-#define isAlert(alert) (alert == true)
-
-#define setAlert(alert) alert = true
-
-#define clearAlert(alert) alert = false
-
-inline logAlert(alert) {
-  printf("alert = %d\n", alert)
-}
-
-/*****************************************************************************/
-/*                                Exam Type                                  */
-/*****************************************************************************/
-mtype = {routine, urgent}
-mtype examType = routine
-
-#define isExamTypeRoutine(type) (type == routine)
-
-#define setExamTypeRoutine(type) type = routine
-
-#define isExamTypeUrgent(type) (type == urgent)
-
-#define setExamTypeUrgent(type) type = urgent
-
-inline logExamType(type) {
-  printf("examType = %e\n", type)
-}
-
-/*****************************************************************************/
-/*                                Exam Time                                  */
-/*****************************************************************************/
-mtype = {now, unscheduled, scheduled}
-mtype examTime = unscheduled
-
-#define isExamTimeNow(time) (time == now)
-
-#define setExamTimeNow(time) time = now
-
-#define isExamTimeUnscheduled(time) (time == unscheduled)
-
-#define setExamTimeUnscheduled(time) time = unscheduled
-
-#define isExamTimeScheduled(time) (time == scheduled)
-
-#define setExamTimeScheduled(time) time = scheduled
-
-inline logExamTime(time) {
-  printf("examTime = %e\n", time)
-}
-
-/*****************************************************************************/
-/*                     Behavior Model for Severity Trend                     */
-/*****************************************************************************/
-inline updateSeverityTrendAndAlert(alert, trendSeverity, severity) {
-  if
-  :: true -> setWithinCareCapability(trendSeverity)
-  :: true -> setOutsideCareCapability(trendSeverity)
-  fi
-
-  logTrend(trendSeverity)
-  
-  if
-  :: true -> setAlert(alert)
-  :: true
-  fi
-
-  logAlert(alert)
-  }
-
-/*****************************************************************************/
 /*                    Behavior Model for Patient Severity                    */
 /*****************************************************************************/
 inline updatePatientSeverity(trendSeverity, severity) {
@@ -160,6 +86,18 @@ inline updatePatientMortality(trendSeverity, severity) {
 }
 
 /*****************************************************************************/
+/*                     Behavior Model for Severity Trend                     */
+/*****************************************************************************/
+inline updateSeverityTrend(trendSeverity) {
+  if
+  :: true -> setWithinCareCapability(trendSeverity)
+  :: true -> setOutsideCareCapability(trendSeverity)
+  fi
+
+  logTrend(trendSeverity)
+}
+
+/*****************************************************************************/
 /*                     Behavior Model for Doctor Orders                      */
 /*****************************************************************************/
 inline updateDoctorOrders(severity, orders) {
@@ -175,32 +113,4 @@ inline updateDoctorOrders(severity, orders) {
     fi
   fi
   logOrders(orders)
-}
-
-/*****************************************************************************/
-/*                       Behavior Model for Exam Type                        */
-/*****************************************************************************/
-inline updateExamType(alert, trendSeverity, severity, examType) {
-  clearAlert(alert)
-  if
-  :: (isExamTypeRoutine(examType) && !isWithinCareCapability(trendSeverity)) ->
-    if
-    :: true -> setExamTypeUrgent(examType)
-    :: true
-    fi
-  :: else
-  fi
-  logExamType(examType)
-}
-
-/*****************************************************************************/
-/*                       Behavior Model for Exam Time                        */
-/*****************************************************************************/
-inline setExamTimeIfScheduled(time) {
-  if
-  :: isExamTimeScheduled(time) ->
-    setExamTimeNow(time)
-  :: true
-  fi
-  logExamTime(time)
 }
