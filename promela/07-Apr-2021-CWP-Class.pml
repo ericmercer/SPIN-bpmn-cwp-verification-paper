@@ -1,16 +1,16 @@
 /*****************************************************************************/
 /*                            Doctors Orders                                 */
 /*****************************************************************************/
-mtype = {homeCare, hospital, discharge}
+mtype = {homeCare, admission, discharge}
 mtype orders = homeCare
 
 #define isHomeCare(orders) (orders == homeCare)
 
 #define setHomeCare(orders) orders = homeCare
 
-#define isHospital(orders) (orders == hospital)
+#define isHospital(orders) (orders == admission)
 
-#define setHospital(orders) orders = hospital
+#define setHospital(orders) orders = admission
 
 #define isDischarge(orders) (orders == discharge)
 
@@ -24,89 +24,89 @@ inline logOrders(orders) {
 /*                            Patient Severity                               */
 /*****************************************************************************/
 #define EXPIRED 255
-byte severity = 0
+byte sevLvl = 0
 
-#define setSeverity(severity, value) severity = value
-#define isRequiresHospital(severity) (severity >= 2 && severity != EXPIRED)
-#define isFatality(severity) (severity == EXPIRED)
+#define setSeverity(sevLvl, value) sevLvl = value
+#define isRequiresHospital(sevLvl) (sevLvl >= 2 && sevLvl != EXPIRED)
+#define isFatality(sevLvl) (sevLvl == EXPIRED)
 
-inline logSeverity(severity) {
-  printf("severity = %d\n", severity)
+inline logSeverity(sevLvl) {
+  printf("sevLvl = %d\n", sevLvl)
 }
 
 //****************************************************************************/
 /*                      Patient Care Capability Level                        */
 /*****************************************************************************/
-byte careCapability = 2
+byte careCapLvl = 2
 
 #define setCareCapability(careCabapility, value) careCabapility = value
-#define isWithinCareCapability(severity) (severity < careCapability)
-#define setWithinCareCapability(severity) severity = (careCapability - 1)
-#define setOutsideCareCapability(severity) severity = careCapability
+#define isWithinCareCapability(sevLvl) (sevLvl < careCapLvl)
+#define setWithinCareCapability(sevLvl) sevLvl = (careCapLvl - 1)
+#define setOutsideCareCapability(sevLvl) sevLvl = careCapLvl
 
-inline logCareCapability(careCapability) {
-  printf("careCapability = %d\n", careCabapility)
+inline logCareCapability(careCapLvl) {
+  printf("careCapability = %d\n", careCapLvl)
 }
 
 /*****************************************************************************/
 /*                         Patient Severity Trend                            */
 /*****************************************************************************/
-byte trendSeverity = 0
+byte trndSevLvl = 0
 
-inline logTrend(trendSeverity) {
-  printf("trendSeverity = %d\n", trendSeverity)
+inline logTrend(trndSevLvl) {
+  printf("trendSeverity = %d\n", trndSevLvl)
 }
 
 /*****************************************************************************/
 /*                    Behavior Model for Patient Severity                    */
 /*****************************************************************************/
-inline updatePatientSeverity(trendSeverity, severity) {
+inline updatePatientSeverity(trndSevLvl, sevLvl) {
   if
-  :: isWithinCareCapability(trendSeverity) -> 
+  :: isWithinCareCapability(trndSevLvl) -> 
      if
-     :: true -> setSeverity(severity, 0)
-     :: true -> setSeverity(severity, 1)
+     :: true -> setSeverity(sevLvl, 0)
+     :: true -> setSeverity(sevLvl, 1)
      fi
-  :: !isWithinCareCapability(trendSeverity) -> setSeverity(severity, 2)
+  :: !isWithinCareCapability(trndSevLvl) -> setSeverity(sevLvl, 2)
   :: true
   fi
-  setSeverity(trendSeverity, severity)
-  logSeverity(severity)
+  setSeverity(trndSevLvl, sevLvl)
+  logSeverity(sevLvl)
 }
 
-inline updatePatientMortality(trendSeverity, severity) {
+inline updatePatientMortality(trndSevLvl, sevLvl) {
   if
-  :: !isWithinCareCapability(trendSeverity) -> 
-    setSeverity(severity, EXPIRED)
-  :: !isWithinCareCapability(severity) ->
-    setSeverity(severity, EXPIRED)
+  :: !isWithinCareCapability(trndSevLvl) -> 
+    setSeverity(sevLvl, EXPIRED)
+  :: !isWithinCareCapability(sevLvl) ->
+    setSeverity(sevLvl, EXPIRED)
   :: true
   fi
-  logSeverity(severity)
+  logSeverity(sevLvl)
 }
 
 /*****************************************************************************/
 /*                     Behavior Model for Severity Trend                     */
 /*****************************************************************************/
-inline updateSeverityTrend(trendSeverity) {
+inline updateSeverityTrend(trndSevLvl) {
   if
-  :: true -> setWithinCareCapability(trendSeverity)
-  :: true -> setOutsideCareCapability(trendSeverity)
+  :: true -> setWithinCareCapability(trndSevLvl)
+  :: true -> setOutsideCareCapability(trndSevLvl)
   fi
 
-  logTrend(trendSeverity)
+  logTrend(trndSevLvl)
 }
 
 /*****************************************************************************/
 /*                     Behavior Model for Doctor Orders                      */
 /*****************************************************************************/
-inline updateDoctorOrders(severity, orders) {
+inline updateDoctorOrders(sevLvl, orders) {
   if
-  :: isRequiresHospital(severity) ->
+  :: isRequiresHospital(sevLvl) ->
     setHospital(orders)
   :: else ->
     if
-      :: (severity != 0) -> 
+      :: (sevLvl != 0) -> 
         setHomeCare(orders)
       :: else -> 
         setDischarge(orders)

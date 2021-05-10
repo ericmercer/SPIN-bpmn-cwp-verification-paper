@@ -8,6 +8,8 @@
 \usepackage{comment}
 \usepackage{listings}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{graphicx}
+\graphicspath{{./figs/}} 
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -28,7 +30,8 @@
   breaklines=false,
   breakatwhitespace=true,
   tabsize=2,
-  linewidth=2\linewidth
+  linewidth=2\linewidth,
+  morekeywords={always, eventually, until, implies, ltl}
 }
 
 \hyphenation{op-tical net-works semi-conduc-tor}
@@ -40,6 +43,7 @@
 \newcommand{\etal}{\textit{et al.}}
 \newcommand{\etc}{\textit{etc.}}
 \newcommand{\adhoc}{\textit{ad hoc}}
+\newcommand{\phware}{PHware\copyright}
 
 \begin{document}
 \title{
@@ -78,6 +82,9 @@ Seatle, Washington}
 
 % \section{Introduction}
 % \input{intro}
+
+\section{Remote Patient Care Overview}
+\input{overview}
 
 \section{Conceptual Work Problem}
 \input{cwp}

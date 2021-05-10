@@ -46,10 +46,10 @@ inline logExamType(type) {
 /*****************************************************************************/
 /*                       Behavior Model for Exam Type                        */
 /*****************************************************************************/
-inline updateExamType(trendSeverity, examType) {
+inline updateExamType(trndSevLvl, examType) {
   clearAlert(alert)
   if
-  :: (isExamTypeRoutine(examType) && !isWithinCareCapability(trendSeverity)) ->
+  :: (isExamTypeRoutine(examType) && !isWithinCareCapability(trndSevLvl)) ->
     if
     :: true -> setExamTypeUrgent(examType)
     :: true
@@ -204,8 +204,8 @@ active proctype clinician() {
       consumeToken(clinicianTask01In2)
       consumeToken(clinicianRecv01Vitals)
       printf("01- Doctor or Nurse examine pt\n")
-      updatePatientSeverity(trendSeverity, severity)
-      updateDoctorOrders(severity, orders)
+      updatePatientSeverity(trndSevLvl, sevLvl)
+      updateDoctorOrders(sevLvl, orders)
       setExamTimeUnscheduled(examTime)
       setExamTypeRoutine(examType)
       putToken(clinicianXor5)
@@ -222,14 +222,14 @@ active proctype clinician() {
     atomic {
       consumeToken(clinicianTask03)
       printf("03- Doctor admit pt to hospital or ICU care\n")
-      updatePatientMortality(trendSeverity, severity)
+      updatePatientMortality(trndSevLvl, sevLvl)
       putToken(clinicianXor4)
     }
   :: hasToken(clinicianTask07a) ->
     atomic {
       consumeToken(clinicianTask07a)
       printf("07a- Doc-Nurse review alert, vitals and exam schedule\n")
-      updateExamType(trendSeverity, examType)
+      updateExamType(trndSevLvl, examType)
       setExamTimeIfScheduled(examTime)
       putToken(clinicianXor9)
     }
@@ -237,7 +237,7 @@ active proctype clinician() {
     atomic {
       consumeToken(clinicianTask07b)
       printf("07b- Doc-Nurse review vitals and exam schedule\n")
-      updateExamType(trendSeverity, examType)
+      updateExamType(trndSevLvl, examType)
       setExamTimeIfScheduled(examTime)
       putToken(clinicianXor10)
     }
@@ -281,7 +281,7 @@ active proctype clinician() {
     atomic {
       consumeToken(clinicianXor4)
       if
-      :: isFatality(severity) ->
+      :: isFatality(sevLvl) ->
         putToken(clinicianEndPtExpired)
       :: else ->
         putToken(clinicianTask01In2)
@@ -386,8 +386,8 @@ active proctype homeCareFlow() {
       consumeToken(homeCareFlowTask05In00)
       consumeToken(homeCareFlowTask05In01)
       printf("05- Pt or care-giver follow order to record vitals\n")
-      updatePatientMortality(trendSeverity, severity)
-      updateSeverityTrend(trendSeverity)
+      updatePatientMortality(trndSevLvl, sevLvl)
+      updateSeverityTrend(trndSevLvl)
       updateAlert(alert)
       putToken(clinicianRecv01Vitals)
       putToken(homeCareFlowXor6)
@@ -406,7 +406,7 @@ active proctype homeCareFlow() {
     atomic {
       consumeToken(homeCareFlowXor6)
       if
-      :: isFatality(severity) ->
+      :: isFatality(sevLvl) ->
         putToken(homeCareFlowEndPtExpired)
       :: else ->
         putToken(homeCareFlowXor7)
