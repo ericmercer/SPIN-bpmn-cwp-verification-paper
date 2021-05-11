@@ -124,7 +124,7 @@ inline updateDoctorOrders(sevLvl, orders) {
         setHomeCare(orders)
       :: (isNone(orders) && (sevLvl == 0)) ->
         setHomeCare(orders)
-      :: else -> 
+      :: else ->
         setDischarge(orders)
     fi
   fi

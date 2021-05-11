@@ -129,7 +129,7 @@ bit clinicianXor11In3 = 0
 /*****************************************************************************/
 bit homeCareFlowEnd196 = 0
 bit homeCareFlowEndPtExpired = 0
-bit homeCareFlowRecv00 = 0
+bit homeCareStart170 = 0
 bit homeCareFlowSend00 = 0
 bit homeCareFlowTask04 = 0
 bit homeCareFlowTask05In00 = 0
@@ -216,7 +216,7 @@ active proctype clinician() {
       printf("02- Doctor orders home care with PHWARE and 4-7 day routine exam\n")
       setExamTypeRoutine(examType)
       putToken(clinicianRecv01)
-      putToken(homeCareFlowRecv00)
+      putToken(homeCareStart170)
     }
   :: hasToken(clinicianTask03) ->
     atomic {
@@ -269,11 +269,11 @@ active proctype clinician() {
     atomic {
       consumeToken(clinicianXor5)
       if
-      :: isHospital(orders) ->
+      :: isRequiresHospital(sevLvl) ->
         putToken(clinicianTask03)
-      :: isDischarge(orders) ->
+      :: (!isRequiresHospital(sevLvl) && isDischarge(orders)) ->
         putToken(clinicianEnd61)
-      :: isHomeCare(orders) ->
+      :: else ->
         putToken(clinicianTask02)
       fi
     }
@@ -364,9 +364,9 @@ active proctype homeCareFlow() {
     atomic {
       break
     }
-  :: hasToken(homeCareFlowRecv00)
+  :: hasToken(homeCareStart170)
     atomic {
-      consumeToken(homeCareFlowRecv00)
+      consumeToken(homeCareStart170)
       putToken(homeCareFlowTask04)
     }
   :: hasToken(homeCareFlowSend00) ->

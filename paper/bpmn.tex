@@ -25,7 +25,7 @@ active proctype name() {
 
 The distributed and asynchronous BPMN semantics, as described in the standard, flow tokens through the workflow model to control activation of elements. As such, every visual construct defines activation conditions based on arrived tokens. Each element also defines what happens at activation in terms of consuming incoming tokens and generating outgoing tokens. The Promela model of the workflow follows these token based semantics. Each choice in the do-statement is associated with an element of the workflow. And the choice is active if the element meets its activation conditions based on tokens at its incoming edges.
 
-For example, the diamond shaped gates in the workflow model are all exclusive-or gates as indicated by the small 'x' in the bottom corner. Here is the Promela implementation of the \texttt{Xor5 severity} gate on the left of the clinician lane.
+For example, the diamond shaped gates in the workflow model are all exclusive-or gates as indicated by the small 'x' in the bottom corner. Here is the Promela implementation of the \texttt{Xor5} gate on the left of the clinician lane.
 %
 {\small
 \begin{lstlisting}[style=myPromela]
@@ -33,39 +33,101 @@ For example, the diamond shaped gates in the workflow model are all exclusive-or
   atomic {
     consumeToken(clinicianXor5)
     if
-    :: isHospital(orders) ->
+    :: isRequiresHospital(sevLvl) ->
       putToken(clinicianTask03)
-    :: isDischarge(orders) ->
+    :: (!isRequiresHospital(sevLvl) && 
+         isDischarge(orders)) ->
       putToken(clinicianEnd61)
-    :: isHomeCare(orders) ->
+    :: else ->
       putToken(clinicianTask02)
     fi
   }
 \end{lstlisting}
 }
 % 
-\noindent The \emph{::} denotes that it is one of several choices that may be available at any iteration of the do-loop in the clinicians process. The \texttt{clinicianXor5} is a global variable to represent the presence or absence of a token on the incoming edge of the gate: \texttt{bit clinicianXor5 = 0}. 
+\noindent The \emph{::} denotes that the \texttt{Xor5 severity} gate is one of the several choices that may be available at any iteration of the do-loop in the clinicians process. The atomic-statement means that all the enclosed statements happen in a single-step of the model and cannot be sub-divided by any other interleaving action from another process.
 
+The \texttt{clinicianXor5} is a global variable to represent the presence or absence of a token on the incoming edge of the gate: \texttt{bit clinicianXor5 = 0}. The \texttt{hasToken}, \texttt{consumeToken}, and \texttt{putToken} macros have their implied intuitive meanings. The if-statement outputs the token on the appropriate edge depending on the \texttt{sevLvl} as indicated by the BPMN model in \figref{fig:bpmn}. 
 
-The Promela implementation for the workflow model in \figref{fig:bpmn} assumes that elements never need, or consume, more than one token from the same source. It also assumes that there is never more than one token from the same source ever pending. The first assumption holds trivially in the workflow. The second assumption merits some discussion later after introducing the Promela model for each element. 
+Note that the Promela implementation here for the workflow model assumes that elements never need, or consume, more than one token from the same source, and as a consequence, it also assumes that there is never more than one token from the same source ever pending. The first assumption holds trivially in the workflow. The consequence of the first assumption merits some discussion there is one place in the model where multiple tokens are sent without each being consumed.
 
+Consider the Promela model for task 05 in the patient-caregiver bottom lane shown below.
+%
+{\small
+\begin{lstlisting}[style=myPromela]
+:: hasToken2Xor(homeCareFlowTask05In00, 
+  homeCareFlowTask05In01) ->
+  atomic {
+    consumeToken(homeCareFlowTask05In00)
+    consumeToken(homeCareFlowTask05In01)
+    printf("05- Pt or care-giver follow
+            order to record vitals\n")
+    updatePatientMortality(trndSevLvl, sevLvl)
+    updateSeverityTrend(trndSevLvl)
+    updateAlert(alert)
+    putToken(clinicianRecv01Vitals)
+    putToken(homeCareFlowXor6)
+  }
+\end{lstlisting}
+}
+%
+\noindent It expects a token either from left task 04 or the below \texttt{Xor7}. After the update-macros non-deterministically update the CWP object state and the alert val, all of which are discussed in \secref{sec:env}, it places a token on both downstream edges. The first being the \texttt{seconds catch AI} in the clinicians flow and the second being the \texttt{Xor6} gate in the patient-caregiver flow. 
 
-Exlusive-or means that only one token comes in at a time and goes out at a time on the gate.
+The frequency with which the model checker activates the \emph{seconds catch AI} element in the clinician flow is not coupled, correlated, or synchronized with task 06. That means that the \texttt{putToken(clinicianRecv01Vitals)} could take place several times between anyone being consumed. Ignoring all these consecutive token placements not only does not affect the choices available to the clinician that are defined in the flow, but is not relevant to any property specified in the CWP. The CWP does not mandate that every vital be reviewed, rather, it insists that the patient have an exam at some point if at elevated risk. That behavior is part of the model.
 
-The BPMN semantics for these gates under the state assumptions is that 
+At this point of the discussion, it is also worth noting that time in not modeled in the Promela verification model. That means that any process in the Promela model may undergo an arbitrary, possibly unbounded, delay. For example, the model checker may simply delay, forever, the clinicians process so that it never reviews the vitals since the the patient-caregiver process is able to continue, forever, to generate vitals. The Promela distributed semantics intuitively mean that any process can be delayed as long as other processes are able to make progress. In this way, the model checker considers any and all interleaving interactions between processes. As mentioned previously, a fairness constraint is used to exclude some of these infinite behavior such as the one just discussed. As such, the \texttt{hours delay} element in the clinicians flow is not part of the model.
 
+Only a few elements are left to discuss after tasks and gates. The message catching elements such as the aforementioned \texttt{seconds catch AI} require two incoming tokens to activate as shown in the Promela model below.
+%
+{\small
+\begin{lstlisting}[style=myPromela]
+:: hasToken2And(clinicianRecv01, 
+  clinicianRecv01Vitals) ->
+  atomic {
+    consumeToken(clinicianRecv01)
+    consumeToken(clinicianRecv01Vitals)
+    putToken(clinicianXor8)
+  }
+\end{lstlisting}
+}
+%
+\noindent One token is from the owning workflow while the other token represents the message. Messages have no content in this model as the CWP object state encodes the \texttt{trndSevLvl} on which actions are taken regarding risk awareness.
 
-Th
-Task 06 in the middle of the AI cloud server lane sends vitals to the clinician's lane. The frequency with which the clinician reviews vitals at the \emph{seconds catch AI} element in the middle of the top green clinician's lane is not at all coupled, correlated, or synchronized with task 06. That means that an arbitrary number of vitals could be sent between reviews. Ignoring the number of reported vitals does not affect the choices available to the clinician in terms of ordering an urgent exam.
+The end elements such as \texttt{pt expired} in the clinician flow break out of the do-statement defining the process behavior.
+%
+{\small
+\begin{lstlisting}[style=myPromela]
+:: hasToken(clinicianEndPtExpired) ->
+  atomic {
+    break
+  }
+\end{lstlisting}
+}
+%
+\noindent While the \texttt{End 196} element in the patient-caregiver flow merely consumes the token to effectively stop the process.
+%
+{\small
+\begin{lstlisting}[style=myPromela]
+:: hasToken(homeCareFlowEnd196) ->
+  atomic {
+    consumeToken(homeCareFlowEnd196)
+  }
+\end{lstlisting}
+}
+% 
 
+The start elements only need to receive a token as in the \texttt{Start 170} of the patient-caregiver flow.
+%
+{\small
+\begin{lstlisting}[style=myPromela]
+:: hasToken(homeCareStart170)
+  atomic {
+    consumeToken(homeCareStart170)
+    putToken(homeCareFlowTask04)
+  }
+\end{lstlisting}
+}
+% 
+\noindent The actual start for the entire workflow in the clinician task, \texttt{pt + COVID-19} is not modeled; rather, before the do-statement in the process, a token is assigned to the appropriate incoming flow of task 01.
 
-
-It is also worth noting that time in not modeled in the Promela verification model. That means that any element of the model may undergo an arbitrary, possibly unbounded, delay. For example, the model checker may simply delay, forever, the clinician reviewing vitals if the patient is able to continue, forever, to generate vitals. SPIN implements a distributed semantics that intuitively means that any concurrent element can be delayed as long as other elements are able to make progress. In this way, the model checker considers any and all interleaving interactions between concurrent elements. As mentioned previously, a fairness constraint is used to exclude some infinite behavior such as the clinician ignoring forever the vitals from the patient.
-
-
-
-These assumptions are restrictions on the general BPMN semantics but do not affect the model here because only one active patient is considered in the model and where tokens do accumulate, simple ignoring the number of tokens does not exclude any allowable behaviors. 
-
-, and the one place where token 
-
-Each construct used in the \phware\ workflow model in \figref{fig:bpmn} is discussed.
+Creating the actual Promela model is a tedious error-prone manual process. Some effort has been invested in naming, organizing, and formatting the model to make it more amenable to visual inspection. The visual inspection is the only process by which the structure of the flow in the Promela model is verified to match the structure of the flow in the BPMN graphical model.
