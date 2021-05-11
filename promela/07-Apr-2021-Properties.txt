@@ -1,5 +1,8 @@
 alwayInAState
 fairPathExists
+InitStateExists
+InitStateMutex
+InitStateEdges
 ptDischargedExists
 ptDischargedMutex
 ptDischargedEdges

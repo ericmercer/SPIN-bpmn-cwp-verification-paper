@@ -1,8 +1,10 @@
 /*****************************************************************************/
 /*                            Doctors Orders                                 */
 /*****************************************************************************/
-mtype = {homeCare, admission, discharge}
-mtype orders = homeCare
+mtype = {homeCare, admission, discharge, none}
+mtype orders = none
+
+#define isNone(orders) (orders == none)
 
 #define isHomeCare(orders) (orders == homeCare)
 
@@ -24,9 +26,12 @@ inline logOrders(orders) {
 /*                            Patient Severity                               */
 /*****************************************************************************/
 #define EXPIRED 255
-byte sevLvl = 0
+#define INIT 42
+
+byte sevLvl = INIT
 
 #define setSeverity(sevLvl, value) sevLvl = value
+#define isINIT(sevLvl) (sevLvl == INIT)
 #define isRequiresHospital(sevLvl) (sevLvl >= 2 && sevLvl != EXPIRED)
 #define isFatality(sevLvl) (sevLvl == EXPIRED)
 
@@ -51,7 +56,7 @@ inline logCareCapability(careCapLvl) {
 /*****************************************************************************/
 /*                         Patient Severity Trend                            */
 /*****************************************************************************/
-byte trndSevLvl = 0
+byte trndSevLvl = INIT
 
 inline logTrend(trndSevLvl) {
   printf("trendSeverity = %d\n", trndSevLvl)
@@ -62,13 +67,22 @@ inline logTrend(trndSevLvl) {
 /*****************************************************************************/
 inline updatePatientSeverity(trndSevLvl, sevLvl) {
   if
+  :: (isINIT(sevLvl) && isINIT(trndSevLvl)) -> 
+     if
+     :: true -> setSeverity(sevLvl, 0)
+     :: true -> setSeverity(sevLvl, 1)
+     :: true -> setSeverity(sevLvl, 2)
+     fi 
   :: isWithinCareCapability(trndSevLvl) -> 
      if
      :: true -> setSeverity(sevLvl, 0)
      :: true -> setSeverity(sevLvl, 1)
      fi
-  :: !isWithinCareCapability(trndSevLvl) -> setSeverity(sevLvl, 2)
-  :: true
+  :: else -> 
+     if
+     :: true -> setSeverity(sevLvl, 1)
+     :: true -> setSeverity(sevLvl, 2)
+     fi
   fi
   setSeverity(trndSevLvl, sevLvl)
   logSeverity(sevLvl)
@@ -107,6 +121,8 @@ inline updateDoctorOrders(sevLvl, orders) {
   :: else ->
     if
       :: (sevLvl != 0) -> 
+        setHomeCare(orders)
+      :: (isNone(orders) && (sevLvl == 0)) ->
         setHomeCare(orders)
       :: else -> 
         setDischarge(orders)

@@ -11,28 +11,33 @@
 /*****************************************************************************/
 /*                               CWP States                                  */
 /*****************************************************************************/
+#define InitState                                                             \
+(                                                                             \
+  isNone(orders)                                                              \
+)
+
 #define HospitalState                                                         \
 (                                                                             \
-     (    isRequiresHospital(sevLvl)                                        \
+     (    isRequiresHospital(sevLvl)                                          \
        && isHospital(orders)                                                  \
      )                                                                        \
 )
 
 #define ptInAppropriateHomeCareState                                          \
 (                                                                             \
-     (    (! isRequiresHospital(sevLvl))                                    \
+     (    (! isRequiresHospital(sevLvl))                                      \
        && isHomeCare(orders)                                                  \
-       && isWithinCareCapability(sevLvl)                                    \
-       && isWithinCareCapability(trndSevLvl)                               \
+       && isWithinCareCapability(sevLvl)                                      \
+       && isWithinCareCapability(trndSevLvl)                                  \
      )                                                                        \
 )
 
 #define ptInElevatedRiskHomeCareState                                         \
 (                                                                             \
-     (    (! isRequiresHospital(sevLvl))                                    \
+     (    (! isRequiresHospital(sevLvl))                                      \
        && isHomeCare(orders)                                                  \
-       && isWithinCareCapability(sevLvl)                                    \
-       && (! isWithinCareCapability(trndSevLvl))                           \
+       && isWithinCareCapability(sevLvl)                                      \
+       && (! isWithinCareCapability(trndSevLvl))                              \
      )                                                                        \
 )   
 
@@ -43,14 +48,15 @@
 
 #define ptExpiredState                                                        \
 (                                                                             \
-  isFatality(sevLvl)                                                        \
+  isFatality(sevLvl)                                                          \
 )                                                                             \
 
 /*****************************************************************************/
 /*                           No uncovered states                             */
 /*****************************************************************************/
 
-#define inAState          HospitalState                                       \
+#define inAState          InitState                                           \
+                       || HospitalState                                       \
                        || ptInAppropriateHomeCareState                        \
                        || ptInElevatedRiskHomeCareState                       \
                        || ptDischargedState                                   \
@@ -69,6 +75,41 @@ ltl alwayInAState {(always (inAState))}
 ltl fairPathExists {(always (! fair))}
 
 /*****************************************************************************/
+/*                          Initial State Verification                       */
+/*****************************************************************************/
+ltl InitStateExists {(fair implies (always (! InitState)))}
+ltl InitStateMutex {
+  ( 
+    always (
+      InitState implies (
+        (
+             InitState
+          && (! HospitalState)
+          && (! ptInAppropriateHomeCareState)
+          && (! ptInElevatedRiskHomeCareState)
+          && (! ptDischargedState)
+          && (! ptExpiredState)
+        )
+      )
+    )
+  )
+}
+ltl InitStateEdges {
+  (
+    fair implies (
+      always (
+        InitState implies (
+          InitState until (
+                ptInAppropriateHomeCareState
+            ||  HospitalState
+          )
+        )
+      )
+    )
+  )
+}
+
+/*****************************************************************************/
 /*                Patient Discharged State Verification                      */
 /*****************************************************************************/
 ltl ptDischargedExists {(fair implies (always (! ptDischargedState)))}
@@ -77,7 +118,8 @@ ltl ptDischargedMutex {
     always (
       ptDischargedState implies (
         (
-             (! HospitalState)
+             (! InitState)
+          && (! HospitalState)
           && (! ptInAppropriateHomeCareState)
           && (! ptInElevatedRiskHomeCareState)
           && ptDischargedState
@@ -108,7 +150,8 @@ ltl ptExpiredMutex {
     always (
       ptExpiredState implies (
         (
-             (! HospitalState)
+             (! InitState)
+          && (! HospitalState)
           && (! ptInAppropriateHomeCareState)
           && (! ptInElevatedRiskHomeCareState)
           && (! ptDischargedState)
@@ -131,15 +174,16 @@ ltl ptExpiredEdges {
 }
 
 /*****************************************************************************/
-/*                        ICU State Verification                            */
+/*                        Hospital State Verification                            */
 /*****************************************************************************/
-ltl ICUExists {(fair implies (always (! HospitalState)))}
-ltl ICUMutex {
+ltl HospitalExists {(fair implies (always (! HospitalState)))}
+ltl HospitalMutex {
   ( 
     always (
       HospitalState implies (
         (
-             HospitalState
+             (! InitState)
+          && HospitalState
           && (! ptInAppropriateHomeCareState)
           && (! ptInElevatedRiskHomeCareState)
           && (! ptDischargedState)
@@ -149,7 +193,7 @@ ltl ICUMutex {
     )
   )
 }
-ltl ICUEdges {
+ltl HospitalEdges {
   (
     fair implies (
       always (
@@ -174,7 +218,8 @@ ltl ptInAppropriateHomeCareMutex {
     always (
       ptInAppropriateHomeCareState implies (
         (
-             (! HospitalState)
+             (! InitState)
+          && (! HospitalState)
           && ptInAppropriateHomeCareState
           && (! ptInElevatedRiskHomeCareState)
           && (! ptDischargedState)
@@ -208,7 +253,8 @@ ltl ptInElevatedRiskHomeCareMutex {
     always (
       ptInElevatedRiskHomeCareState implies (
         (
-             (! HospitalState)
+             (! InitState)
+          && (! HospitalState)
           && (! ptInAppropriateHomeCareState)
           && ptInElevatedRiskHomeCareState
           && (! ptDischargedState)
