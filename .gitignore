@@ -12,3 +12,5 @@ dirt
 ~*
 *.d
 .DS*
+*.bbl
+*.blg

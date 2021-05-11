@@ -9,9 +9,9 @@ ptDischargedEdges
 ptExpiredExists
 ptExpiredMutex
 ptExpiredEdges
-ICUExists
-ICUMutex
-ICUEdges
+HospitalExists
+HospitalMutex
+HospitalEdges
 ptInAppropriateHomeCareExists
 ptInAppropriateHomeCareMutex
 ptInAppropriateHomeCareEdges
