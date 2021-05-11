@@ -7,3 +7,8 @@ combined*.pml
 *.pdf
 *.trail
 pan
+_tmp*
+dirt
+~*
+*.d
+.DS*
