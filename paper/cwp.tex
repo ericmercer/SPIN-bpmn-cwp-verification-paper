@@ -1,3 +1,13 @@
+Translating the CWP into an equivalent model with LTL properties is a novel contribution of the work detailed in this paper. The translation takes place in several steps.
+\begin{compactenum}
+  \item Define global values in Promela for the object state;
+  \item Define predicates in Promela for each state of the state diagram such that a predicate is true when the object state corresponds to the state diagram state;
+  \item Write LTL system properties for coverage of the object state by the state diagram states in the state diagram and the existence of the goal states; and
+  \item Write LTL state properties for the existence, mutual exclusion, and conformance to defined transitions for each state diagram state.
+\end{compactenum}
+The resulting suite of LTL properties model precisely the meaning of the CWP. They insist that every state in the state diagram exist somewhere in the workflow, every object state is covered by some state diagram state, an object state never belongs to two state diagram states, and only defined transitions in the state diagram are followed.
+
+\subsection{State Definitions}
 The Pomela defintion for the object state (\texttt{orders}, \texttt{sevLvl}, \texttt{careCapLvl}, \texttt{trndSevLvl} )  is direct The orders are modeled with an enumerated type in Promela.
 %
 {\small
