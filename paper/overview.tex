@@ -15,8 +15,6 @@ The \phware\ consumer product, assuming an eventual approval for medical applica
 \label{fig:cwp}
 \end{figure*}
 
-The \phware\ system is modeled as a collection of workflows in the \emph{Business Process Modeling Notation} (BPMN) \cite{BPMNSpecification}. These include workflows for the clinicians, AI cloud services, and patient-caregivers. Workflow modeling satisfies the need for effective functional integration of people and computing. A workflow is also able to preserve the medical decision authority of providers and enable the formal verification of the correctness of the end-to-end system design for outpatient safety which is the topic of this paper.
-
 The fundamental purpose of the \phware\ system is to establish and maintain providers' timely awareness of outpatients' conditions and risk at home care; thereby, enhancing patient safety with better decisions that deliver precise care. The purpose is, however, abstract, intangible, and needs a more rigorous definition than common knowledge or intuition provides. 
 
 The needed rigor is accomplished with a CWP, and the CWP becomes the verification requirement for the workflow model that is used as a certification that it accomplishes its intended purpose of timely awareness and patient safety while in remote monitoring. This CWP is shown in \figref{fig:cwp}. It defines the risk awareness for patient safety at home, and it defines allowable actions based on the current risk awareness. In this way, the CWP is the actionable risk awareness that must be implemented by any remote patient monitoring system such as \phware. 
@@ -31,7 +29,7 @@ The object state consists of the physician orders (\texttt{orders}), the actual 
 
 The state transition diagram on the right of \figref{fig:cwp} shows the relevant care states with the associated risks patients can occupy and the transition conditions among them. In the initial state (top) the patient has tested positive. The arc labeled \textbf{A} occurs when an exam shows symptoms of low severity and a provider orders home care with \phware. 
 
-Outpatients remain in appropriate home care until either an exam finds discharge criteria met and ordered (\textbf{C}), or the trending severity level is greater than their care capability level (\textbf{D}). In such cases, patients are at an \emph{elevated risk} in home care. They must not remain at an elevated risk in home care because there is a possible direct path to fatality (\textbf{G}). So a near future exam must either order admission (\textbf{E}), find their risk lower than what the analytics claimed, or make their risk lower with orders for better care at home (\textbf{F}). Patients who are admitted to hospital may eventually be discharged back to home care (\textbf{H}) or discharged directly (\textbf{C}). 
+Outpatients remain in appropriate home care until either an exam finds discharge criteria met and ordered (\textbf{C}), or the trending severity level is greater than their care capability level (\textbf{D}). In such cases, patients are at an \emph{elevated risk} in home care. They must not remain at an elevated risk in home care because there is a possible direct path to fatality (\textbf{G}). So a near future exam must either order admission (\textbf{E}), find their risk lower than what the analytics claimed, or make their risk lower with additional prescribed interventions (\textbf{F}). Patients who are admitted to hospital may eventually be discharged back to home care (\textbf{H}) or discharged directly (\textbf{C}). 
 
 The declarative knowledge of the CWP specifies \emph{what} a workflow solving the CWP must accomplish without depending on \emph{how} it does it. As such, the CWP motivates the design, and then when the design is ready, the CWP is the property for formal verification that must be satisfied to prove the workflow takes requisite actions in regard to risk awareness.
 
@@ -39,12 +37,14 @@ The declarative knowledge of the CWP specifies \emph{what} a workflow solving th
 \begin{figure*}
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[scale=0.65]{bpmn.png}
+      \includegraphics[scale=0.55]{bpmn.png}
     \end{tabular}
   \end{center}
-\caption{The workflow model for the expanded \phware\ system.}
+\caption{The workflow models for the \phware\ system.}
 \label{fig:bpmn}
 \end{figure*}
+
+The \phware\ system is modeled as a collection of workflows in the \emph{Business Process Modeling Notation} (BPMN) \cite{BPMNSpecification}. These include workflows for the clinicians, AI cloud services, and patient-caregivers. Workflow modeling satisfies the need for effective functional integration of people and computing. A workflow is also able to preserve the medical decision authority of providers and enable the formal verification of the correctness of the end-to-end system design for outpatient safety which is the topic of this paper.
 
 The workflow model for the \phware\ system is in \figref{fig:bpmn}. It is designed with the MATH tool-suite, \cite{workflowmodel}, to model the functionality of interacting behaviors of the clinicians, AI cloud services, and patient-caregivers. Applying and adapting BPMN to medical care in health informatics has become the focus of the recent BPM+ project within the Object Management Group \cite{bpm}. 
 
