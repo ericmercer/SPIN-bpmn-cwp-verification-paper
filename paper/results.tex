@@ -1,9 +1,9 @@
-The full Promela model, with the LTL properties for the CWP, is in a public Github repository \cite{repo}. The \emph{README.md} file in the repository summarizes its content and how to reproduce the proof certificate for the model. The actual model is divided into three files: the CWP object state, the CWP LTL properties, and the BPMN workflow model. A script, \emph{short-verify.sh}, combines the three files to create the final Promela model and then runs SPIN on all twenty properties.
+The full Promela model, with the LTL properties for the CWP, is in a public Github repository \cite{repo}. The \emph{README.md} file in the repository summarizes its content and how verify the model. The model is divided into three files: the CWP object state, the CWP LTL properties, and the BPMN workflow. A script, \emph{short-verify.sh}, combines the three files to create the Promela model and then runs SPIN on all the properties.
 
 \begin{figure}
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[scale=0.5]{proof.png}
+      \includegraphics[scale=0.50]{proof.png}
     \end{tabular}
   \end{center}
 \caption{The verification results from the SPIN model checker.}
