@@ -1,7 +1,7 @@
-\documentclass[conference]{IEEEtran}
+\documentclass{llncs}
 \usepackage{cite}
-\usepackage{amsmath}
-\usepackage{amsthm}
+%\usepackage{amsmath}
+%\usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{url}
 \usepackage{comment}
@@ -34,8 +34,6 @@
   morekeywords={always, eventually, until, implies, ltl}
 }
 
-\hyphenation{op-tical net-works semi-conduc-tor}
-
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
 \newcommand{\secref}[1]{Sec.~\ref{#1}}
 
@@ -55,18 +53,19 @@
 % use a multiple column layout for up to three different
 % affiliations
 \author{
-\IEEEauthorblockN{Eric Mercer}
-\IEEEauthorblockA{Department of Computer Science\\
-Brigham Young University\\
-Provo, Utah}
+Eric Mercer\inst{1}\orcidID{0000-0002-2264-2958}
 \and
-\IEEEauthorblockN{Keith Butler}
-\IEEEauthorblockA{BPM+\\
-Seatle, Washington}
+Keith Butler\inst{2} 
 \and
-\IEEEauthorblockN{Ali Bahrami}
-\IEEEauthorblockA{Bionous LLC \\ 
-Kirkland, Washington}
+Ali Bahrami\inst{3}
+}
+
+\institute{
+  Brigham Young University, Provo UT, USA
+\and
+  BPM+, Seattle WA, USA
+\and  
+  Bionous LLC, Kirkland WA, USA
 }
 
 % conference papers do not typically use \thanks and this command
@@ -79,8 +78,6 @@ Kirkland, Washington}
 \begin{abstract}
 \input{abstract}
 \end{abstract}
-
-\IEEEpeerreviewmaketitle
 
 \section{Introduction}
 \input{intro}
@@ -106,7 +103,7 @@ Kirkland, Washington}
 \input{conclusion}
 
 \clearpage
-\bibliographystyle{IEEEtran}
+\bibliographystyle{splncs04}
 \bibliography{paper}
 \end{document}
 
