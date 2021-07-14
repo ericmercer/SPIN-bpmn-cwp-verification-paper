@@ -44,7 +44,7 @@ The declarative knowledge of the CWP specifies \emph{what} a workflow solving th
 \label{fig:bpmn}
 \end{figure*}
 
-The \phware\ system is modeled as a collection of workflows in the \emph{Business Process Modeling Notation} (BPMN) \cite{BPMNSpecification}. These include workflows for the clinicians, AI cloud services, and patient-caregivers. Workflow modeling satisfies the need for effective functional integration of people and computing. A workflow is also able to preserve the medical decision authority of providers and enable the formal verification of the correctness of the end-to-end system design for outpatient safety which is the topic of this paper.
+The \phware\ system is modeled as a collection of workflows in the \emph{Business Process Model Notation} (BPMN) \cite{BPMNSpecification}. These include workflows for the clinicians, AI cloud services, and patient-caregivers. Workflow modeling satisfies the need for effective functional integration of people and computing. A workflow is also able to preserve the medical decision authority of providers and enable the formal verification of the correctness of the end-to-end system design for outpatient safety which is the topic of this paper.
 
 The workflow model for the \phware\ system is in \figref{fig:bpmn}. It is designed with the MATH tool-suite, \cite{workflowmodel}, to model the functionality of interacting behaviors of the clinicians, AI cloud services, and patient-caregivers. Applying and adapting BPMN to medical care in health informatics has become the focus of the recent BPM+ project within the Object Management Group \cite{bpm}. 
 
@@ -56,7 +56,7 @@ Hospital admission (task 03) corresponds to edges \textbf{B} and \textbf{E} in t
 
 The major part of the workflow begins in the bottom, salmon color, lane for the patient-caregiver. Task 04 obtains the \phware\ sensor and associated smartphone application. It then repeats recording vitals at provider-ordered time intervals (task 05) until an exam resulting in the patient being discharged or the patient expires in home health care. The raw vitals data are transmitted by the smartphone application to the AI cloud services. 
 
-The middle metallic grey lane represents the AI cloud services where a personal data analyzer operates on the data (task 06).  The analyzer immediately sends a packet to the clinician dashboard with vital signs and trends. An alert is added if predicted trends exceeds home care capability or allowed severity in home care.
+The middle metallic grey lane represents the AI cloud services where a personal data analyzer operates on the data (task 06).  The analyzer immediately sends a packet to the clinician dashboard with vital signs and trends. An alert is added if predicted trends exceed home care capability or allowed severity in home care.
 
 The specialized dashboard for clinicians maintains risk awareness for each outpatient (right side of the top green lane). Alerts (task 07a) skip any routine delay for the clinicians' attention. The workflow is designed to preserve the clinicians' ultimate decision authority. The AI can reason that risk is elevated if it determines trending severity is greater than the home care capability, and the provider can question the reasoning, and then confirm the alert or revise it. 
 

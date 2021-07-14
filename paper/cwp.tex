@@ -37,7 +37,7 @@ The meaning of the relevant care states with the associated risks patients can o
   \mathtt{sevLvl} < 2 \wedge \mathtt{sevLvl} \le \mathtt{careCapLvl} \wedge \mathtt{orders} = \mathtt{homeCare}
 \]
 %
-The negated disjunction of the outgoing transitions require
+The negated disjunction of the outgoing transitions requires
 %
 \[
   \mathtt{orders} \neq \mathtt{discharge} \wedge \mathtt{tndSevLvl} \le \mathtt{careCapLvl}
@@ -94,7 +94,7 @@ ltl fairPathExists {(always (! fair))}
 %
 \noindent Here \texttt{fair} is an eventuality that should exist in the workflow. The meaning of \emph{eventually} is that at some point in the future of the path currently being considered, there exists a state, where the expression \texttt{(ptDischargedState || ptExpiredState)} is true. The property to verify is expressed as an invariant using the \emph{always} operator. This invariant \emph{should not hold} in the workflow model (e.g., it should result in a verification error). 
 
-The very nature of LTL makes existential properties awkward to express in that they are accomplished by writing a property that should not hold. The counter-example to the property showing where it does hold is a \emph{witness} to the existential property. Claiming that the eventuality \texttt{fair} never holds in any state in any path means that if it does hold somewhere (e.g., exists), then the model checker will find a witness attesting as much. Anytime a property is used on the left-hand side of an implication, then such a existential property should be verified. More on this requirement later.
+The very nature of LTL makes existential properties awkward to express in that they are accomplished by writing a property that should not hold. The counter-example to the property showing where it does hold is a \emph{witness} to the existential property. Claiming that the eventuality \texttt{fair} never holds in any state in any path means that if it does hold somewhere (e.g., exists), then the model checker will find a witness attesting as much. Anytime a property is used on the left-hand side of an implication, then such an existential property should be verified. More on this requirement later.
 
 The term \emph{fair} is a reference to the over-approximating nature of the workflow model. Indeed, in considering the workflow in \figref{fig:bpmn}, it is possible that a patient is never discharged or that the patient never expires. Such a behavior is \emph{not fair} because it is not emblematic of the real world---patients eventually are discharged or expire. As such, the property proves the existence of paths in the workflow that end in the goal states, and this same property is used later to restrict verification to only those paths that end in one of goal states thereby excluding from consideration, in verification, any infinite workflow behaviors where the patient never recovers or expires.
 
@@ -163,6 +163,6 @@ ltl ptInAppropriateHomeCareEdges {
 %
 \noindent Here the workflow stays in the indicated state \emph{until} it transitions to one of the two successor states allowed by the CWP. 
 
-The \emph{until} operator requires that at least one of the states on the right of the operator exist somewhere in the future of the path being considered. Those states are either \emph{Pt at elevated risk in home care} or \emph{Pt discharged}. The \emph{Pt in appropriate home care state} must be found in every state up to the point where the first state on the right of the operator is found. The restriction to only fair paths in the workflow is necessary because if the path is not fair, then a transition to one of the two successors may never take place as the patient may reside in the \emph{Pt in appropriate home care state} state forever thereby violating the \emph{until} property. As before, the third property of a state regarding its outgoing edges is an invariant that must hold at every state along every fair path in the model. 
+The \emph{until} operator requires that at least one of the states on the right of the operator exists somewhere in the future of the path being considered. Those states are either \emph{Pt at elevated risk in home care} or \emph{Pt discharged}. The \emph{Pt in appropriate home care state} must be found in every state up to the point where the first state on the right of the operator is found. The restriction to only fair paths in the workflow is necessary because if the path is not fair, then a transition to one of the two successors may never take place as the patient may reside in the \emph{Pt in appropriate home care state} state forever thereby violating the \emph{until} property. As before, the third property of a state regarding its outgoing edges is an invariant that must hold at every state along every fair path in the model. 
 
 The two system properties with the three properties for each of the CWP states makes a total of twenty properties that must hold in order to claim that the workflow satisfies the CWP.

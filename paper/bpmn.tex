@@ -4,7 +4,7 @@ The translation of BPMN to Promela presented here is inspired by existing method
 
 The top green clinicians lane and the bottom salmon colored patient-caregiver lane in the workflow model in \figref{fig:bpmn} are directly modeled with a process in Promela while the middle lane for the AI cloud server is implicitly modeled by the communication between the two processes. In other words, there is a non-deterministic choice in the patient-caregiver process at task 05 to set a value for \texttt{trndSvl}, and the Promela semantics, by definition, deliver that value at some point to the clinician process. Adding the extra process for the AI cloud server does not affect, or change, this explained basic behavior; it only serves to add non-necessary complexity.
 
-The basic structure the for the clinicians and the patient-caregiver processes have the following structure.
+The basic structure for the clinicians and the patient-caregiver processes have the following structure.
 %
 {\small
 \begin{lstlisting}[style=myPromela]
@@ -75,7 +75,7 @@ Consider the Promela model for task 05 in the patient-caregiver bottom lane show
 \end{lstlisting}
 }
 %
-\noindent It expects a token either from the left task (04) or the below gate (\texttt{Xor7}). After the update-macros non-deterministically update the CWP object state and the alert, all of which are discussed in \secref{sec:env}, it places a token on both downstream edges. The first being the \texttt{seconds catch AI} in the clinicians flow and the second being the \texttt{Xor6} gate in the patient-caregiver flow. 
+\noindent It expects a token either from the left task (04) or the below gate (\texttt{Xor7}). After the update-macros non-deterministically update the CWP object state and the alert, all of which are discussed in \secref{sec:env}, it places a token on both downstream edges. The first is the \texttt{seconds catch AI} in the clinicians flow and the second is the \texttt{Xor6} gate in the patient-caregiver flow. 
 
 The frequency with which the model checker activates the \emph{seconds catch AI} element in the clinician flow is not coupled, correlated, or synchronized with task 06. That means that the \texttt{putToken(clinicianRecv01Vitals)} could take place several times between \emph{seconds catch AI} consuming a token. Ignoring all these consecutive token placements does not affect the choices available to the clinician that are defined in the flow, and it does not affect any property of the CWP. The CWP does not mandate that every vital be reviewed, rather, it insists that the patient have an exam at some point if at elevated risk. That behavior is still a part of the model with the aforementioned implementation.
 
@@ -108,7 +108,7 @@ The end elements such as \texttt{pt expired} in the clinician flow break out of 
 \end{lstlisting}
 }
 %
-\noindent While the \texttt{End 196} element in the patient-caregiver flow merely consumes the token to effectively stop the process.
+\noindent The \texttt{End 196} element in the patient-caregiver flow merely consumes the token to effectively stop the process.
 %
 {\small
 \begin{lstlisting}[style=myPromela]
