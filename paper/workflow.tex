@@ -1,0 +1,38 @@
+\section{Workflow Model}[t]
+\begin{figure*}
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[scale=0.55]{bpmn.png}
+    \end{tabular}
+  \end{center}
+\caption{The workflow models for the \phware\ system.}
+\label{fig:bpmn}
+\end{figure*}
+
+The \phware\ system is modeled as a collection of workflows in the \emph{Business Process Model Notation} (BPMN) \cite{BPMNSpecification}. These include workflows for the clinicians, AI cloud services, and patient-caregivers. Workflow modeling satisfies the need for effective functional integration of people and computing. A workflow is also able to preserve the medical decision authority of providers and enable the formal verification of the correctness of the end-to-end system design for outpatient safety which is the topic of this paper.
+
+The workflow model for the \phware\ system is in \figref{fig:bpmn}. It is designed with the MATH tool-suite, \cite{workflowmodel}, to model the functionality of interacting behaviors of the clinicians, AI cloud services, and patient-caregivers. Applying and adapting BPMN to medical care in health informatics has become the focus of the recent BPM+ project within the Object Management Group \cite{bpm}. 
+
+The functional integration in the workflow model is adapted from concurrent design engineering in aerospace where there are specific tracks for each of the multiple design disciplines that coordinate the work on a common physical design artifact \cite{10.1007/978-1-4471-1538-0_9}. The colored lanes of the workflow are the design tracks, and the CWP is the common work artifact that must be accomplished. Each affects, and is affected, by the CWP. This feature is pivotal for integrating cognitive work that is distributed over people and computers. It allows people and computers to share work on the CWP despite vast differences in the performance properties of the way they do it. 
+
+\figref{fig:bpmn} shows the workflow of clinicians, AI cloud services, and patient-caregivers to establish and maintain risk awareness. It starts in the green clinicians lane in the upper left of the workflow with a patient with a positive test. Such a positive test initiates an exam (task 01). The red letters in the workflow correlate to transitions in the CWP in \figref{fig:cwp}. 
+
+Hospital admission (task 03) corresponds to edges \textbf{B} and \textbf{E} in the CWP. A severity level less that two satisfies edges \textbf{A} and \textbf{F} with the workflow leading to the clinician orders for home care via \phware\ and tele-health exams augmented with real-time vitals (task 02). Discharge criteria include a second test with a negative result following the recovery period in clinic policy and cannot be met after the first exam.
+
+The major part of the workflow begins in the bottom, salmon color, lane for the patient-caregiver. Task 04 obtains the \phware\ sensor and associated smartphone application. It then repeats recording vitals at provider-ordered time intervals (task 05) until an exam resulting in the patient being discharged or the patient expires in home health care. The raw vitals data are transmitted by the smartphone application to the AI cloud services. 
+
+The middle metallic grey lane represents the AI cloud services where a personal data analyzer operates on the data (task 06).  The analyzer immediately sends a packet to the clinician dashboard with vital signs and trends. An alert is added if predicted trends exceed home care capability or allowed severity in home care.
+
+The specialized dashboard for clinicians maintains risk awareness for each outpatient (right side of the top green lane). Alerts (task 07a) skip any routine delay for the clinicians' attention. The workflow is designed to preserve the clinicians' ultimate decision authority. The AI can reason that risk is elevated if it determines trending severity is greater than the home care capability, and the provider can question the reasoning, and then confirm the alert or revise it. 
+
+If an alert is confirmed, an urgent exam is ordered (task 08a). An urgent exam may result in hospital admission (\textbf{E}). When multiple patients have alerts, the provider must prioritize outpatients based on professional knowledge and patient familiarity. The provider may also decide the trend can be controlled by adjusting orders such as more frequent vitals reporting or changing medications (\textbf{F}). If an alert is dismissed by the provider, a routine exam still may be due to be scheduled (task 08b), or it may already be scheduled to start soon. 
+
+For non-alerts, the provider reviews vitals when time permits (task 07b) and may order a routine exam to be scheduled. Alternatively, if clinical judgment deems it appropriate, the clinicians may order an urgent exam. The decision gate \texttt{Xor11} (far right of \figref{fig:bpmn}) is where exam times are managed. If an exam is already scheduled to begin soon, then the flow returns to task 01 where the next exam is administered when the patient arrives. The result of the exam is either to discharge, admit, or resume home care with remote monitoring and newly prescribed interventions as needed.
+
+It is not possible to manually reason about the correctness of the workflow models in taking actions on risk awareness given the concurrency in the workflow and the several asynchronous interactions with the risk awareness both to update the risk and make decisions on the risk. The adaptation of model checking to formally reason about the correctness of the system in an automated way is an important and novel contribution to verifying the functionality of joint human-computer teams. 
+
+\begin{comment}
+The rest of this paper describes the verification of the workflow against the CWP as a verification requirement. The verification is accomplished with the SPIN model checker. 
+
+The CWP in \figref{fig:cwp} is translated into equivalent Linear Temporal Logic (LTL), and the workflow in \figref{fig:bpmn} is translated into its equivalent Promela model, where Promela is the input language for SPIN. The SPIN model checker then verifies that the workflow in its current form does indeed implement the CWP.
+\end{comment}
