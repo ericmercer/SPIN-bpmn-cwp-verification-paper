@@ -39,9 +39,8 @@ For example, the diamond shaped gates in the workflow model are all exclusive-or
 \end{lstlisting}
 }
 % 
-\noindent The \texttt{::} denotes that the \texttt{Xor5 severity} gate is one of the several choices that may be available at any iteration of the do-loop in the clinicians process. The atomic-statement means that all the enclosed statements happen in a single-step of the model and cannot be sub-divided by any other interleaving action from another process.
-
-The \texttt{clinicianXor5} is a global variable to represent the presence or absence of a token on the incoming edge of the gate: \texttt{bit clinicianXor5 = 0}. The \texttt{hasToken}, \texttt{consumeToken}, and \texttt{putToken} macros have their implied intuitive meanings. The if-statement outputs the token on the appropriate edge depending on the \texttt{sevLvl}. 
+\noindent The \texttt{::}-statement denotes that the \texttt{Xor5} gate is one of the several choices that may be available at any iteration of the do-loop in the clinicians process. The atomic-statement means that all the enclosed statements happen in a single-step of the model and cannot be sub-divided by an action from another process.
+The \texttt{clinicianXor5} is a global variable, and \texttt{hasToken}, \texttt{consumeToken}, and \texttt{putToken} have their implied intuitive meanings. The if-statement outputs the token on the appropriate edge depending on the \texttt{sevLvl}. 
 
 Note that the Promela implementation here for the workflow model assumes that elements never need, or consume, more than one token from the same source, and as a consequence, it also assumes that there is never more than one token from the same source ever pending. The first assumption holds trivially in the workflow. The consequence of the first assumption merits some discussion as there is one place in the model where multiple tokens are sent without each being consumed.
 
