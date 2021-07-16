@@ -109,6 +109,8 @@ The end elements such as \texttt{pt expired} in the clinician flow break out of 
 % 
 \noindent The actual start for the entire workflow in the clinician task, \texttt{pt + COVID-19} is not modeled; rather, before the do-statement in the process, a token is assigned to the appropriate incoming flow of task 01.
 
+The final Promela model is validated with visual inspection and with the verification results proper. The structure of the Promela model itself is purposed to have a one-to-one mapping to the graphical workflow making the visual inspection somewhat trivial but not perfect in that small typos can still misconnect elements. The verification though usually produces counter-examples or unexpected results that quickly isolate any such typos.
+
 \begin{comment}
 Creating the actual Promela model is a tedious error-prone manual process. Some effort has been invested in naming, organizing, and formatting the model to make it more amenable to visual inspection. The visual inspection is the only process by which the structure of the flow in the Promela model is verified to match the structure of the flow in the BPMN graphical model.
 \end{comment}
