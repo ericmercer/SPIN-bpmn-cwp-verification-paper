@@ -1,7 +1,19 @@
-\documentclass{llncs}
+\documentclass[a4paper,twoside]{article}
+
+% For the SCITEPRESS Proceedings
+\usepackage{epsfig}
+\usepackage{subcaption}
+\usepackage{calc}
+\usepackage{amssymb}
+\usepackage{amstext}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{multicol}
+\usepackage{pslatex}
+\usepackage{apalike}
+\usepackage{SCITEPRESS} 
+
 \usepackage{cite}
-%\usepackage{amsmath}
-%\usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{url}
 \usepackage{comment}
@@ -10,6 +22,7 @@
 \usepackage{graphicx}
 \graphicspath{{./figs/}} 
 \usepackage{paralist}
+
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -44,74 +57,67 @@
 \newcommand{\adhoc}{\textit{ad hoc}}
 \newcommand{\phware}{PHware\textsuperscript{\textregistered}}
 
+\newcommand{\scitesection}[1]{\section{\uppercase{#1}}}
+
 \begin{document}
 \title{
-  Model Checking A Remote Monitoring Heath IT System for Patient Safety
+  Model Checking Functional Integration of Human Cognition and Machine Reasoning
 }
 
-% author names and affiliations
-% use a multiple column layout for up to three different
-% affiliations
 \author{
-Eric Mercer\inst{1}\orcidID{0000-0002-2264-2958}
-\and
-Keith Butler\inst{2} 
-\and
-Ali Bahrami\inst{3}
+  \authorname{
+    Eric Mercer\sup{1}\orcidAuthor{0000-0002-2264-2958}, 
+    Keith Butler\sup{2} and 
+    Ali Bahrami\sup{3}
+  }
+  \affiliation{\sup{1}Brigham Young University, Provo UT, USA}
+  \affiliation{\sup{2}BPM+, Seattle WA, USA}
+  \affiliation{\sup{3}Bionous LLC, Kirkland WA, USA}
+  \email{egm@cs.byu.edu, keith.a.butler@gmail.com, abahrami@yahoo.com}
 }
 
-\institute{
-  Brigham Young University, Provo UT, USA
-\and
-  BPM+, Seattle WA, USA
-\and  
-  Bionous LLC, Kirkland WA, USA
+\keywords{Model Checking, Business Process Modeling, Model-Based Validation, Model Transformation, Reasoning About Models, Promela, SPIN, Linear Temporal Logic, COVID-19}
+
+\abstract{
+  \input{abstract}
 }
 
-% conference papers do not typically use \thanks and this command
-% is locked out in conference mode. If really needed, such as for
-% the acknowledgment of grants, issue a \IEEEoverridecommandlockouts
-% after \documentclass
+\onecolumn \maketitle \normalsize \setcounter{footnote}{0} \vfill
 
-\maketitle
-
-\begin{abstract}
-\input{abstract}
-\end{abstract}
-
-\section{Introduction}
+\scitesection{Introduction}
 \input{intro}
 
-\section{CWP of Actionable Risk Awareness}
+\scitesection{CWP of Actionable Risk Awareness}
 \input{cwp}
 
-\section{CWP Translation to LTL}
+\scitesection{CWP Translation to LTL}
 \input{ltl}
 
-\section{Workflow for Functional Integration}
+\scitesection{Workflow for Functional Integration}
 \input{workflow}
 
-\section{BPMN Translation to Promela}
+\scitesection{BPMN Translation to Promela}
 \label{sec:bpmn}
 \input{bpmn}
 
-\section{Environment Model for Verification}
+\scitesection{Environment Model for Verification}
 \label{sec:env}
 \input{env}
 
-\section{SPIN Verification Results}
+\scitesection{SPIN Verification Results}
 \label{sec:results}
 \input{results}
 
-\section{Related Work}
+\scitesection{Related Work}
 \input{rw}
 
-\section{Conclusions and Future Work}
+\scitesection{Conclusions and Future Work}
 \input{conclusion}
 
-\clearpage
-\bibliographystyle{splncs04}
-\bibliography{paper}
+\bibliographystyle{apalike}
+{\small 
+\bibliography{paper}}
+
 \end{document}
 
 

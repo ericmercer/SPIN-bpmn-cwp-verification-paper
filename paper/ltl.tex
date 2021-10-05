@@ -5,7 +5,11 @@ The properties are expressed over atomic propositions with one atomic propositio
 Consider the \emph{Pt in appropriate home care} state in \figref{fig:cwp}. The conjunction of the incoming transitions require
 %
 \[
-  \mathtt{sevLvl} < 2 \wedge \mathtt{orders} = \mathtt{homeCare}\ \mathrm{with}\ \mathtt{remote} \vee \mathtt{more} \vee \mathtt{adjustedRx}
+\begin{array}{l}
+  \mathtt{sevLvl} < 2\ \wedge\ \\
+  \mathtt{orders} = (\mathtt{homeCare}\ \mathrm{with}\ \mathtt{remote}\ \vee \\
+                    \mathtt{more} \vee \mathtt{adjustedRx})
+\end{array}
 \]
 %
 The negated disjunction of the outgoing transitions require
@@ -22,7 +26,8 @@ There are two system for any CWP. The first is that no object state exists that 
 {\small
 \begin{lstlisting}[style=myPromela]
 #define inAState  InitState || HospitalState 
- || ptInAppropriateHomeCareState || ptInElevatedRiskHomeCareState
+ || ptInAppropriateHomeCareState 
+ || ptInElevatedRiskHomeCareState
  || ptDischargedState || ptExpiredState
 ltl alwayInAState {(always (inAState))}
 \end{lstlisting}
@@ -34,7 +39,9 @@ The second system level property looks for executions ending in the goal states.
 %
 {\small
 \begin{lstlisting}[style=myPromela]
-#define fair (((eventually (ptDischargedState || ptExpiredState))))
+#define fair (((eventually 
+  (   ptDischargedState 
+   || ptExpiredState))))
 ltl fairPathExists {(always (! fair))}
 \end{lstlisting}
 }
@@ -55,7 +62,8 @@ The first state property proves the existence of the state somewhere in the work
 {\small
 \begin{lstlisting}[style=myPromela]
 ltl ptInAppropriateHomeCareExists 
-{(fair implies (always (! ptInAppropriateHomeCareState)))}
+{(fair implies 
+  (always (! ptInAppropriateHomeCareState)))}
 \end{lstlisting}
 }
 %
@@ -66,10 +74,14 @@ The second state property proves the state is mutually exclusive to the other st
 {\small
 \begin{lstlisting}[style=myPromela]
 ltl ptInAppropriateHomeCareMutex {
-  (always (ptInAppropriateHomeCareState implies ((
-       (! InitState) && (! HospitalState) 
-    && ptInAppropriateHomeCareState && (! ptInElevatedRiskHomeCareState) 
-    && (! ptDischargedState) && (! ptExpiredState)))))}
+  (always 
+    (ptInAppropriateHomeCareState implies ((
+         (! InitState) 
+      && (! HospitalState) 
+      && ptInAppropriateHomeCareState 
+      && (! ptInElevatedRiskHomeCareState) 
+      && (! ptDischargedState) 
+      && (! ptExpiredState)))))}
 \end{lstlisting}
 }
 %
@@ -80,10 +92,11 @@ The third state property proves that only transitions allowed by the CWP are imp
 {\small
 \begin{lstlisting}[style=myPromela]
 ltl ptInAppropriateHomeCareEdges {
-  (fair implies (always (ptInAppropriateHomeCareState implies (
-          ptInAppropriateHomeCareState until (
-                ptInElevatedRiskHomeCareState
-            ||  ptDischargedState)))))}
+  (fair implies (always 
+    (ptInAppropriateHomeCareState implies (
+      ptInAppropriateHomeCareState until (
+            ptInElevatedRiskHomeCareState
+        ||  ptDischargedState)))))}
 \end{lstlisting}
 }
 %

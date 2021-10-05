@@ -31,9 +31,11 @@ For example, the diamond shaped gates in the workflow model are all exclusive-or
 :: hasToken(clinicianXor5) -> atomic { 
     consumeToken(clinicianXor5)
     if
-    :: isRequiresHospital(sevLvl) -> putToken(clinicianTask03)
-    :: (!isRequiresHospital(sevLvl) && isDischarge(orders)) -> 
-       putToken(clinicianEnd61)
+    :: isRequiresHospital(sevLvl) -> 
+        putToken(clinicianTask03)
+    :: (!isRequiresHospital(sevLvl) && 
+       isDischarge(orders)) -> 
+        putToken(clinicianEnd61)
     :: else -> putToken(clinicianTask02)
     fi}
 \end{lstlisting}
@@ -48,11 +50,13 @@ Consider the Promela model for task 05 in the patient-caregiver bottom lane show
 %
 {\small
 \begin{lstlisting}[style=myPromela]
-:: hasToken2Xor(homeCareFlowTask05In00, homeCareFlowTask05In01) -> 
+:: hasToken2Xor(homeCareFlowTask05In00, 
+                homeCareFlowTask05In01) -> 
   atomic {
     consumeToken(homeCareFlowTask05In00)
     consumeToken(homeCareFlowTask05In01)
-    printf("05- Pt or care-giver follow order to record vitals\n")
+    printf("05- Pt or care-giver follow 
+              order to record vitals\n")
     updatePatientMortality(trndSevLvl, sevLvl)
     updateSeverityTrend(trndSevLvl)
     updateAlert(alert)
@@ -71,10 +75,12 @@ Only a few elements are left to discuss after tasks and gates. The message catch
 %
 {\small
 \begin{lstlisting}[style=myPromela]
-:: hasToken2And(clinicianRecv01, clinicianRecv01Vitals) -> atomic {
-    consumeToken(clinicianRecv01)
-    consumeToken(clinicianRecv01Vitals)
-    putToken(clinicianXor8)}
+:: hasToken2And(clinicianRecv01, 
+                clinicianRecv01Vitals) -> 
+    atomic {
+      consumeToken(clinicianRecv01)
+      consumeToken(clinicianRecv01Vitals)
+      putToken(clinicianXor8)}
 \end{lstlisting}
 }
 %

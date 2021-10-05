@@ -1,14 +1,14 @@
 The full Promela model, with the LTL properties for the CWP, is in a public Github repository \cite{repo}. The \emph{README.md} file in the repository summarizes its content and how to verify the model. The model is divided into three files: the CWP object state, the CWP LTL properties, and the BPMN workflow. A script, \emph{short-verify.sh}, combines the three files to create the Promela model and then runs SPIN on all the properties.
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[scale=0.50]{proof-digest.png}
+      \includegraphics[scale=0.60]{proof-digest.png}
     \end{tabular}
   \end{center}
 \caption{Some of the verification results from the SPIN model checker.}
 \label{fig:proof}
-\end{figure}
+\end{figure*}
 
 The results for the state properties for \texttt{ptInElevatedRiskHomeCare} with the measured time verifying the entire model is shown in \figref{fig:proof}. Verification takes around three to four minutes on an Intel Core i7 laptop with 16 Gb of RAM. It is not taxing the system in any way. 
 
