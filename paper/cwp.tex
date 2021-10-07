@@ -8,6 +8,8 @@
 \label{fig:cwp}
 \end{figure*}
 
+Human subjects testing of \phware\ needs elaboration to an end-to-end system for remote patient monitoring. The system must comply with policy for appropriate outpatient care and transitions to and from clinical care.
+
 The purpose of \phware is remote monitoring that detects and analyzes seven vital signs to provide clinicians' with timely awareness of their outpatients' conditions and risk during home care, thereby supporting better decisions and enhancing patient safety. This purpose is, however, abstract and intangible. The CWP gives precise meaning to this purpose as a set of transformations on a complex object of work that is shared by activities in a distributed cognitive system.
 
 To serve as an objective and operational definition of elevated risk due to home care, the work here adapts Medicare's 4-point severity-of-illness ratings \cite{Hornbrook2005OverviewOD,severity} and the CDC's Guidance on Home Care \cite{cdc}. The adaptation defines a \emph{Severity Level} less than two as mild, and a \emph{Home Care Capability Level} equal to two as typically appropriate. It then defines \emph{Elevated Outpatient Risk} from home care as either having a \emph{Trending Severity Level} or \emph{Severity Level} greater than the \emph{Home Care Capability Level}.
@@ -19,5 +21,5 @@ In the initial state (top) the patient has tested positive. The arc labeled \tex
 
 The declarative knowledge of the CWP specifies \emph{what} workflows solving the CWP must accomplish without depending on \emph{how} they do it. In this application, the CWP motivates the design, and then when the design is ready, the CWP is the property for formal verification that must be satisfied. 
 
-The validation of the CWP for \phware\ is an interesting problem that is outside the scope of this paper but merits some discussion. Doctors reviewed the CWP using it as a kind of story-board whose rules at each arc are verified as appropriate care. One review noted that the CWP does not distinguish among causes of fatalities but concluded that any patient trending towards fatality must receive life-saving care regardless of co-morbidities, and so no change was required. The SPIN verification also served to validate the CWP and an example of that is given in \secref{sec:results}.
+The validation of the CWP for \phware\ is an interesting problem that is outside the scope of this paper but merits some discussion. Doctors reviewed the CWP using it as a kind of story-board whose rules at each arc are verified as appropriate care. One review initially noted that the CWP does not distinguish among causes of fatalities but concluded that any patient trending towards fatality must receive life-saving care regardless of co-morbidities, and so no change was required. The SPIN verification also served to validate the CWP and an example of that is given in \secref{sec:results}.
 
