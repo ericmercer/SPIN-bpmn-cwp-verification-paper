@@ -8,42 +8,45 @@
 \label{fig:bpmn}
 \end{figure*}
 
-The \phware\ system is modeled as a collection of workflows in the \emph{Business Process Model Notation} (BPMN) \cite{BPMNSpecification}. These include workflows for the clinicians, AI cloud services, and patient-caregivers shown in \figref{fig:bpmn}.\footnote{Many thanks to Stephen White for reviewing the workflow and clarifying aspects of the BPMN semantics.} The workflows are designed with the MATH tool-suite \cite{workflowmodel}. Applying and adapting BPMN to medical care in health informatics has become the focus of the recent BPM+ project within the Object Management Group \cite{bpm}. 
+The \phware\ system is modeled as a collection of workflows in the \emph{Business Process Model Notation} (BPMN) \cite{BPMNSpecification}.
+These include workflows for the clinicians, AI cloud services, and patient-caregivers shown in \figref{fig:bpmn}.\footnote{Many thanks to Stephen White for reviewing the workflow and clarifying aspects of the BPMN semantics.}
+The workflows are designed with the MATH tool-suite \cite{workflowmodel}.
+Applying and adapting BPMN to medical care in health informatics has become the focus of the recent BPM+ project within the Object Management Group \cite{bpm}.
 
-The functional integration method in the workflow model is adapted from concurrent design engineering in aerospace where there are specific tracks for each of the multiple design disciplines that coordinate the work on a common physical design artifact \cite{10.1007/978-1-4471-1538-0_9}. The colored lanes of the workflow are the design tracks, and the CWP is the common work artifact that must be accomplished. Each affects, and is affected, by the CWP. This feature is pivotal for integrating cognitive work that is distributed over humans and machines. It allows humans and machines to share work on the CWP despite vast differences in their performance properties. 
+The functional integration method in the workflow model is adapted from concurrent design engineering in aerospace where there are specific tracks for each of the multiple design disciplines that coordinate the work on a common physical design artifact \cite{10.1007/978-1-4471-1538-0_9}.
+The colored lanes of the workflow are the design tracks, and the CWP is the common work artifact that must be accomplished.
+Each affects, and is affected, by the CWP.
+This feature is pivotal for integrating cognitive work that is distributed over humans and machines.
+It allows humans and machines to share work on the CWP despite vast differences in their performance properties. 
 
-\figref{fig:bpmn} starts in the green clinicians lane in the upper left of the workflow when a patient has a positive test. Such a positive test initiates an exam (task 01). The red letters in the workflow correlate to transitions in the CWP in \figref{fig:cwp}. 
+\figref{fig:bpmn} starts in the green clinicians lane in the upper left of the workflow when a patient has a positive test.
+Such a positive test initiates an exam (task 01). The red letters in the workflow correlate to transitions in the CWP in \figref{fig:cwp}.
 
-Hospital admission (task 03) corresponds to edges \textbf{B} and \textbf{E} in the CWP. A severity level less that two satisfies edges \textbf{A} and \textbf{F} with the workflow leading to the clinician orders for home care (task 02). Discharge criteria include an additional test with a negative result following the recovery period.
+Hospital admission (task 03) corresponds to edges \textbf{B} and \textbf{E} in the CWP.
+A severity level less that two satisfies edges \textbf{A} and \textbf{F} with the workflow leading to the clinician orders for home care (task 02).
+Discharge criteria include an additional test with a negative result following the recovery period.
 
-The patient-caregiver workflow begins at task 04. It then repeats recording vitals at provider-ordered time intervals (task 05) until an exam resulting in the patient being discharged or the patient expires or returns for an exam. The raw vitals data are transmitted by the smartphone application to the AI cloud services. 
+The patient-caregiver workflow begins at task 04.
+It then repeats recording vitals at provider-ordered time intervals (task 05) until an exam resulting in the patient being discharged or the patient expires or returns for an exam.
+The raw vitals data are transmitted by the smartphone application to the AI cloud services. 
 
-The middle metallic grey lane represents the AI cloud services where machine learning operates on sensor data to assign numerical values to vital signs and analyze their trends (task 06). A packet of values and trends over time is sent immediately to a specialized dashboard for clinicians. An alert of elevated risk is added if a \emph{Personal Data Analyzer} reasons that a combination of current or trending values exceed home care capability (\textbf{D}).
-    
-The specialized dashboard for clinicians maintains risk awareness for each outpatient (right side of the top green lane). Alerts (task 07a) skip any routine delay for the clinicians' attention. The workflow and user interface are designed to preserve the clinicians' ultimate decision authority. The doctor can quickly access the AI reasoning, confirm current or trending severity justifies the alert (\textbf{D}) or revise it.
+The middle metallic grey lane represents the AI cloud services where machine learning operates on sensor data to assign numerical values to vital signs and analyze their trends (task 06).
+A packet of values and trends over time is sent immediately to a specialized dashboard for clinicians.
+An alert of elevated risk is added if a \emph{Personal Data Analyzer} reasons that a combination of current or trending values exceed home care capability (\textbf{D}).
 
-If an alert is confirmed, an urgent exam is ordered (task 08a). An urgent
-exam may result in hospital admission (\textbf{E}). When multiple patients have alerts,
-the provider must prioritize outpatients based on professional knowledge and
-patient familiarity. The provider may also decide the trend can be controlled by
-adjusting orders such as more frequent vitals reporting or changing medications
-(\textbf{F}). If an alert is dismissed by the provider, a routine exam still may be due to be scheduled (task 08b), or it may already be scheduled to start soon.
+The specialized dashboard for clinicians maintains risk awareness for each outpatient (right side of the top green lane).
+Alerts (task 07a) skip any routine delay for the clinicians' attention.
+The workflow and user interface are designed to preserve the clinicians' ultimate decision authority.
+The doctor can quickly access the AI reasoning, confirm current or trending severity justifies the alert (\textbf{D}) or revise it.
 
-\begin{comment}
-The middle metallic grey lane represents the AI cloud services where a personal data analyzer operates on the data (task 06).  The analyzer immediately sends a packet to the clinician dashboard with vital signs and trends. An alert is added if predicted trends exceed home care capability or allowed severity in home care.
+If an alert is confirmed, an urgent exam is ordered (task 08a).
+An urgent exam may result in hospital admission (\textbf{E}).
+When multiple patients have alerts, the provider must prioritize outpatients based on professional knowledge and patient familiarity.
+The provider may also decide the trend can be controlled by adjusting orders such as more frequent vitals reporting or changing medications (\textbf{F}).
+If an alert is dismissed by the provider, a routine exam still may be due to be scheduled (task 08b), or it may already be scheduled to start soon.
 
-The specialized dashboard for clinicians maintains risk awareness for each outpatient (right side of the top green lane). Alerts (task 07a) skip any routine delay for the clinicians' attention. The workflow is designed to preserve the clinicians' ultimate decision authority. The AI can reason that risk is elevated if it determines trending severity is greater than the home care capability, and the provider can question the reasoning, and then confirm the alert or revise it. 
-
-If an alert is confirmed, an urgent exam is ordered (task 08a). An urgent exam may result in hospital admission (\textbf{E}). When multiple patients have alerts, the provider must prioritize outpatients based on professional knowledge and patient familiarity. The provider may also decide the trend can be controlled by adjusting orders such as more frequent vitals reporting or changing medications (\textbf{F}). If an alert is dismissed by the provider, a routine exam still may be due to be scheduled (task 08b), or it may already be scheduled to start soon. 
-\end{comment}
-
-For non-alerts, the provider reviews vitals when time permits (task 07b) and may order a routine exam to be scheduled. Alternatively, if clinical judgment deems it appropriate, the clinicians may order an urgent exam. The decision gate \texttt{Xor11} (far right of \figref{fig:bpmn}) is where exam times are managed. If an exam is already scheduled to begin soon, then the flow returns to task 01 where the next exam is administered when the patient arrives. The result of the exam is either to discharge, admit, or resume home care with remote monitoring and newly prescribed interventions as needed.
-
-\begin{comment}
-
-It is not possible to manually reason about the correctness of the workflow models in taking actions on risk awareness given the concurrency in the workflow and the several asynchronous interactions with the risk awareness both to update the risk and make decisions on the risk. The adaptation of model checking to formally reason about the correctness of the system in an automated way is an important and novel contribution to verifying the functionality of joint human-computer teams. 
-
-  The rest of this paper describes the verification of the workflow against the CWP as a verification requirement. The verification is accomplished with the SPIN model checker. 
-
-The CWP in \figref{fig:cwp} is translated into equivalent Linear Temporal Logic (LTL), and the workflow in \figref{fig:bpmn} is translated into its equivalent Promela model, where Promela is the input language for SPIN. The SPIN model checker then verifies that the workflow in its current form does indeed implement the CWP.
-\end{comment}
+For non-alerts, the provider reviews vitals when time permits (task 07b) and may order a routine exam to be scheduled.
+Alternatively, if clinical judgment deems it appropriate, the clinicians may order an urgent exam.
+The decision gate \texttt{Xor11} (far right of \figref{fig:bpmn}) is where exam times are managed.
+If an exam is already scheduled to begin soon, then the flow returns to task 01 where the next exam is administered when the patient arrives.
+The result of the exam is either to discharge, admit, or resume home care with remote monitoring and newly prescribed interventions as needed.
