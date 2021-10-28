@@ -10,8 +10,8 @@ combined="combined_${bpmn_file}"
 shift 3
 rm ${combined}
 cat ${cwp_class_file} >& ${combined}
-cat ${bpmn_file} >> ${combined}
 cat ${cwp_state_file} >> ${combined}
+cat ${bpmn_file} >> ${combined}
 # echo "$file"
 # echo "$@"
 for i in "$@"
