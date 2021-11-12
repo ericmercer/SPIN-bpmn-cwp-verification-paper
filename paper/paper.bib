@@ -1,17 +1,27 @@
 @misc{repo,
-  key = {SPIN-bpmn-cwp-verification-paper},
-  title  = "Model Checking A Remote Monitoring Heath IT System for Patient Safety",
-  howpublished = "\url{https://github.com/ericmercer/SPIN-bpmn-cwp-verification-paper}"
+  key = {Models},
+  title  = "Verification models for COVID-19 remote patient care",
+  howpublished = "\url{https://github.com/ericmercer/SPIN-bpmn-cwp-verification-paper/tree/main/promela}"
+}
+
+@misc{Phware,
+   key = {Phware},
+   author = {Bahrami, Ali},
+   title = "METHODS AND SYSTEMS OF 3D PHOTOPLETHYSMOGRAM (PPG), U.S. Patent Application No.: 62/785,744",
+   year = {2018}
+   
 }
 
 @misc{spin,
-  key = {spin},
+  key = {SPIN},
   title  = "The {SPIN} Model Checker",
-  howpublished = "\url{http://spinroot.com/spin/whatispin.html}"
+  howpublished = "\url{http://spinroot.com/spin/whatispin.html}",
+  year = {2021}
 }
 
 @misc{bpmn2promela,
-  key = {bpmn2promela},
+  key = {BPMN2Promela},
+  author={Visker, Jamie and Mercer, Eric},
   title  = "{BPMN} to {P}romela",
   note = "Worked completed as part of a project for a course work {Masters} degree.",
   month = "October",
@@ -19,18 +29,19 @@
   howpublished = "\url{https://github.com/ericmercer/cwp-verification.git}"
 }
 
-
 @article{petrinetInspiration,
   title={Formal semantics and analysis of {BPMN} process models using {P}etri {N}ets},
   author={Dijkman, Remco M and Dumas, Marlon and Ouyang, Chun},
   journal={Queensland University of Technology, Tech. Rep},
   year={2007}
+  
 }
 
 @article{choreography,
   title={Design and Implementation of a {BPMN} to {PROMELA} Translator},
   author={Jim, Wenzhong Sun},
   year={2012}
+  
 }
 
 @inproceedings{bpelToPromela,
@@ -52,6 +63,7 @@
 }
 
 @misc{ BPMNSpecification,
+key = {BPMN},
 title = "{BPMN} 2.0",
 year = "2011",
 url = "http://www.omg.org/spec/BPMN/2.0/",
@@ -59,6 +71,7 @@ note = "Object Management Group. Accessed 16-April-2017"
 }
 
 @misc{promelaManual,
+author= "Holzman, Gerard",
 title = "Basic {SPIN} Manual",
 year = "2007",
 url = "http://spinroot.com/spin/Man/Manual.html",
@@ -72,6 +85,14 @@ year = {2004},
 isbn = {052154310X},
 publisher = {Cambridge University Press},
 address = {USA}
+
+}
+
+@book{BPMN,
+author = {White, SA & Myers D.},
+title = {BPMN Modeling and Reference Guide},
+year = {2008},
+publisher = {Future Strategies}
 }
 
 @article{10.1093/jamia/ocaa048,
@@ -91,9 +112,10 @@ address = {USA}
 }
 
 @misc{telehealth,
-  key = {telehealth},
+  key = {Telehealth},
   title  = "Medicare coverage for telehealth",
-  howpublished = "\url{https://www.medicare.gov/coverage/telehealth}"
+  howpublished = "\url{https://www.medicare.gov/coverage/telehealth}",
+  year = {2020}
 }
 
 @article{10.1093/jamia/ocaa067,
@@ -128,10 +150,28 @@ address = {USA}
     eprint = {https://pubs.asahq.org/anesthesiology/article-pdf/134/2/262/500509/20210200.0-00020.pdf},
 }
 
-@misc{remote,
-  key = {remote},
-  title  = "Remote patient monitoring: Comprehensive care at home",
-  howpublished = "\url{https://www.mayoclinichealthsystem.org/hometown-health/speaking-of-health/remote-patient-monitoring-comprehensive-care-at-home}"
+@misc{Mayo,
+key = {Mayo Clinic},
+title = "Remote Patient Monitoring: Comprehensive Care at Home",
+year = {2021},
+howpublished = "\url {https://www.mayoclinichealthsystem.org/hometown-health/speaking-of-health/remote-patient-monitoring-comprehensive-care-at-home}"
+
+}
+
+@misc{Medicare,
+  key = {Medicare},
+  title  = "Your Medicare Coverage > Telehealth",
+  year = {2021},
+  howpublished = {\url{https://www.medicare.gov/coverage/telehealth}}
+  
+}
+
+@misc{NIH,
+ Key = {NIH},
+ title = "Coronavirus Disease 2019 (COVID-19) Treatment Guidelines",
+ year = {2021},
+ howpublished = "\url{https://www.covid19treatmentguidelines.nih.gov/}"
+ 
 }
 
 @article {Aalam229,
@@ -151,12 +191,13 @@ address = {USA}
 }
 
 @inbook{workflowmodel,
-author = {Butler, Keith and Bahrami, Ali and schroder, konrad and Braxton, Melissa and Lyon, Lawrence and Haselkorn, Mark},
+author = {Butler, Keith and Bahrami, Ali and Schroder, Konrad and Braxton, Melissa and Lyon, Lawrence and Haselkorn, Mark},
 year = {2014},
 month = {01},
 pages = {},
 title = {Advances in Workflow Modeling for Health IT: The Modeling \& Analysis Toolsuite for Healthcare ({MATH})},
 publisher = "University of Texas"
+
 }
 
 @inproceedings{workcentered,
@@ -168,6 +209,7 @@ title = {Work-centered design: A case study of a mixed-initiative scheduler},
 journal = {Conference on Human Factors in Computing Systems - Proceedings},
 doi = {10.1145/1240624.1240739},
 booktitle = "CHI 2007"
+
 }
 
 @article{BERRY201615,
@@ -191,8 +233,8 @@ month = {01},
 pages = {4525-4540},
 title = {Ontology models for interaction design: case study of online support},
 doi = {10.1145/1753846.1754191}
-}
 
+}
 
 @inproceedings{Altschul2004PredictiveMI,
   title={Predictive Modeling in the Military Similar Goals , Divergent Paths},
@@ -227,36 +269,15 @@ pages = {1137–1143},
 numpages = {7},
 location = {Montreal, Quebec, Canada},
 series = {IJCAI'95}
-}
 
-@article{severity,
-author = {Horn, {SD} and Horn, {RA} and Sharkey, {PD}},
-year = {1984},
-month = {November},
-title = {The Severity of Illness as a Severity Adjustment to Diagnosis Related Groups},
-journal = {{H}ealth {C}are {F}inancing {R}eview}
-}
-
-@misc{Hornbrook2005OverviewOD,
-  key = {3M},
-  title={Overview of Disease Severity Measures},
-  note = "3{M} {H}ealth {I}nformation {S}ystems. Report to {HCUP}, {NIS}, and {KID}. Downloaded 17-Jan-2021",
-  howpublished = "\url{https://www.hcup-us.ahrq.gov/db/nation/nis/OverviewofSeveritySystems.pdf}"
-}
-
-@misc{cdc,
-  key = {cdc},
-  author = {{CDC}},
-  title  = "Interim Guidance for Implementing Home Care of People Not Requiring Hospitalization for {C}oronavirus Disease 2019 ({COVID}-19)",
-  month = {October},
-  year = {2020},
-  howpublished = "\url{https://www.cdc.gov/coronavirus/2019-ncov/hcp/guidance-home-care.html}"
 }
 
 @misc{bpm,
-  key = {bpm},
+  key = {BPM+},
+  year = {2021},
   title  = "{BPM}+{H}ealth",
   howpublished = "\url{https://www.bpm-plus.org/}"
+
 }
 
 @InProceedings{10.1007/978-1-4471-1538-0_9,
@@ -306,11 +327,12 @@ url = {https://www.sciencedirect.com/science/article/pii/S1571066109003351},
 author = {Rahul Kumar and Eric G. Mercer and Annette Bunker},
 keywords = {live sequence chart, temporal logic, translation, linear, polynomial, spin, nusmv, reduction},
 abstract = {An efficient and mathematically rigorous translation from Live Sequence Charts (LSCs) to temporal logic is essential to providing an end-to-end specification and verification method for System on Chip (SoC) protocols. Without mathematical rigor, no translation can be trusted to completely represent the LSC specification, while inefficiency renders even provably sound translations useless in verifying the correctness of industrial-strength protocols. Previous work shows that the LSC-to-temporal logic and LSC-to-automata translations can be automated and formalized for the LSC language. In the LSC-to-temporal logic translation, the extraordinary size of the resulting formula limits the scalability of the charts that can be translated and verified. Our work, on the other hand, leverages intuitive temporal logic reductions to generate a formula that is at most quadratic in the size of the chart and demonstrates the benefits of the improved translation on several examples.}
-}
 
+}
 
 @article{KUMAR,
 title = {Improved Live Sequence Chart to Automata Translation for Verification},
+author = {Kumar, Rahul and Mercer, Eric},
 journal = {Electronic Communications of the European Association of Software Science and Technology ({EASST})},
 volume = {10},
 number = {1},
@@ -318,6 +340,7 @@ pages = {1863-2122},
 year = {2008},
 note = {Electronic Communications of the European Association of Software Science and Technology (EASST)},
 issn = {1571-0661},
+
 }
 
 @article{garrido,
