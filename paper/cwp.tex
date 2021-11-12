@@ -1,41 +1,37 @@
-\begin{figure*}[t]
+\begin{figure}[t]
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[scale=0.35]{cwp.png}
+      \includegraphics[scale=0.4]{cwp.png}
     \end{tabular}
   \end{center}
-\caption{The CWP for remote COVID-19 patient care.}
+\caption{The \href{https://github.com/ericmercer/SPIN-bpmn-cwp-verification-paper/blob/main/26-Oct-2021-CWP.png}{CWP} for remote COVID-19 patient care.}
 \label{fig:cwp}
-\end{figure*}
+\end{figure}
 
-Human subjects testing of \phware\ needs elaboration to an end-to-end system for remote patient monitoring.
-The system must comply with policy for appropriate outpatient care and transitions to and from clinical care.
+A fundamental aspect of RPM is the establishment and maintenance of providers' awareness of their patient’s condition and risk during home care.
+Medical use and testing of \phware for this purpose will require design of an end-to-end system that must implement appropriate policy for risk awareness for COVID-19 patients during home care, and for transitions to-and-from their different levels of care.
+We call this CWP \emph{actionable risk awareness} and the policy is adapted from \emph{NIH COVID-19 Treatment Guidelines} published by the U.S. National Institute of Health \cite{NIH}.
+The \emph{Guidelines} detail five levels of COVID-19 severity and appropriate treatments for each level.
+In order to apply them as technology-independent CWP they are summarized and represented here as the finite state machine in \figref{fig:cwp}.
 
-The purpose of \phware is remote monitoring that detects and analyzes seven vital signs to provide clinicians' with timely awareness of their outpatients' conditions and risk during home care, thereby supporting better decisions and enhancing patient safety.
-This purpose is, however, abstract and intangible.
-The CWP gives precise meaning to this purpose as a set of transformations on a complex object of work that is shared by activities in a distributed cognitive system.
+The finite state machine is composed of the relevant states patients can occupy, their associated risks, and the transition conditions among them. They give precise, rigorous meaning to the abstract concept of \emph{actionable risk awareness} as a set of transformations on a complex object of work that is shared by the activities in a distributed cognitive system.
 
-To serve as an objective and operational definition of elevated risk due to home care, the work here adapts Medicare's 4-point severity-of-illness ratings \cite{Hornbrook2005OverviewOD,severity} and the CDC's Guidance on Home Care \cite{cdc}.
-The adaptation defines a \emph{Severity Level} less than two as mild, and a \emph{Home Care Capability Level} equal to two as typically appropriate.
-It then defines \emph{Elevated Outpatient Risk} from home care as either having a \emph{Trending Severity Level} or \emph{Severity Level} greater than the \emph{Home Care Capability Level}.
+In the initial state of \figref{fig:cwp} all patients have tested positive for COVID-19. The arc labeled letter-\textbf{B} occurs when an exam finds patients have severity needs that are greater than home care (\emph{sevNeed $>$homeCare}) and are ordered to ambulatory care or hospital admission.
+The remaining focus of Fig.1 is on patients who qualify for home care, with exam findings that are presymptomatic, asymptomic, or have only mild symptoms and no comorbidities (letter-\textbf{A}).
+They are ordered to home care and vitals RPM because the treatment that can be carried out there is equal-to-or-greater than their severity level needs (\emph{$sevNeed \le homeCare$}).
+Vital signs are measured at instructed times for analysis and RPM, thereby establishing an important aspect of \emph{actionable risk awareness}.
+Patients remain in home care until they either meet discharge criteria (letter-\textbf{C}); or the trend of their condition or home care deteriorates  (\emph{trndSevNeed $>$homeCare}) putting them at elevated risk (letter-\textbf{D}).
 
-The CWP of actionable risk awareness was developed using these definitions as a finite state diagram, \figref{fig:cwp}, of the relevant care states patients can occupy, their associated risks, and the transition conditions among them.
-The transition conditions are based on the physician orders (\texttt{orders}), the current severity of the outpatient's condition assigned by a clinician's exam (\texttt{sevLvl}), the level of care at the outpatient's residence (\texttt{careCapLvl}), and the trending severity calculated from the remotely monitored longitudinal data as provided by
-\phware\ cloud analytics (\texttt{trndSevLvl}). 
+Patients must not remain in care that cannot meet their needs because there is a direct path from that state to fatality (letter-\textbf{G}).
+From \textbf{D} a near-future exam must determine if they are ordered to clinical care (letter-\textbf{E}) or whether they can be restored to \emph{$sevNeeds\le homeCare$} with increased RPM or medication for new symptoms (letter-\textbf{F}).
+From ambulatory or hospital care patients can be discharged at \textbf{C}, or expire at \textbf{G}.
 
-In the initial state (top) the patient has tested positive.
-The arc labeled \textbf{A} occurs when an exam shows symptoms of low severity and a provider orders home care with \phware.
-Outpatients remain in appropriate home care until either an exam finds discharge criteria met and ordered (\textbf{C}), or the trending severity level is greater than their care capability level (\textbf{D}).
-In such cases, patients are at an elevated risk in home care.
-They must not remain at an elevated risk in home care because there is a possible direct path to fatality (\textbf{G}).
-So a near future exam must either order admission (\textbf{E}), find their risk lower than what the analytics claimed, or make their risk lower with additional prescribed interventions (\textbf{F}).
-Patients who are admitted to hospital may eventually be discharged back to home care (\textbf{H}) or discharged directly (\textbf{C}).
+The validation of the CWP for \phware merits explanation.
+The \emph{NIH Guidelines} are an authoritative source, but the finite state diagram only summarizes key sections relevant to states and transitions. 
+The graphical representation serves as sort of story board that allowed it to be critiqued by doctors. 
+One example critique led us to add more content to letter-A about the types of home care.  
+For another, we added the primary care provider's exam (PCP exam) as part of discharge orders. The revised version might be adjusted for some clinics to meet local resource limits, but now serves as a core requirement. 
 
-The declarative knowledge of the CWP specifies \emph{what} workflows solving the CWP must accomplish without depending on \emph{how} they do it.
-In this application, the CWP motivates the design, and then when the design is ready, the CWP is the property for formal verification that must be satisfied.
-
-The validation of the CWP for \phware\ is an interesting problem that is outside the scope of this paper but merits some discussion.
-Doctors reviewed the CWP using it as a kind of story-board whose rules at each arc are verified as appropriate care.
-One review initially noted that the CWP does not distinguish among causes of fatalities but concluded that any patient trending towards fatality must receive life-saving care regardless of co-morbidities, and so no change was required.
-The SPIN verification also served to validate the CWP and an example of that is given in \secref{sec:results}.
-
+The requirement specified by the CWP is the medical care problem that must be solved by a system design for vital signs RPM.
+Importantly, the specification is independent of any technology beyond vital signs, and could be met with a variety of systems designed around other technologies.  
+As presented next, this same technical independence also allows the CWP to be translated into LTL, then serve as the criterial property for model-checking to verify the integrated design.

@@ -1,35 +1,33 @@
-There are limited tools for remote objective patient monitoring of diseases where patients may deteriorate quickly.
-Although tele-health is gaining acceptance for improving accessibility and reducing transmission rates \cite{10.1093/jamia/ocaa048,telehealth,10.1093/jamia/ocaa067}, the remote and asynchronous context of tele-health introduces the risk of a patients' conditions deteriorating before their physicians can be aware and intervene \cite{10.1097/ALN.0000000000003578}.
-The goal of remote monitoring is to mitigate and manage that risk to enhance patient safety while in remote care. 
-
-This paper introduces a model-based approach for joint human-computer teaming in remote monitoring that strives to manage and mitigate some aspects of the inherent risk through formal design verification.
-The contribution to functional integration is a computationally independent model, \cite{garrido}, of the \emph{cognitive work problem} (CWP) that a system must solve \cite{workflowmodel,workcentered,BERRY201615,chi2010}. 
-A CWP is a complex \emph{object of work} that can be shared by the activities of a distributed cognitive system to transform it from some initial state to the required goal state.
-The technical neutrality of this object makes it sharable by actors whose performance properties are vastly different; thus, the CWP provides a common basis to represent its state changes that can be performed by a joint team of people and computers.
+ This paper introduces a model-based approach for joint human-computer teaming on cognitive tasks. The contribution to functional integration is a computation independent model \cite{Garrido}, of the \emph{cognitive work problem} (CWP) that a system's design must solve \cite{workflowmodel,workcentered,BERRY201615,chi2010}.
+A CWP is a complex \emph{object of work} that can be shared by the activities of a distributed cognitive system that is supposed to transform it from some initial state to the required goal state.
+The technical neutrality of this object makes it sharable by actors whose performance properties are vastly different; thus, the CWP provides a common basis to represent its state changes that can be performed by a joint team of people and computers. 
 
 The contribution to design verification then re-uses a CWP as a new form of evaluation criterion for model-checking to prove the correctness of the resulting integrated system designs.
-The capability to integrate human cognition with computer reasoning and then verify the design correctness increases the safety for a wide range of critical systems where human well-being is jeopardized by leaving human-computing teaming to informal approaches \cite{remote,Aalam229}.
+The capability to integrate human cognition with computer reasoning and then verify the design correctness can increase safety and reliability for a wide range of critical systems where human well-being is jeopardized by leaving human-computing teaming to informal approaches.
 
-This CWP-augmented workflow modeling approach is presented here in a case study of Bionous \phware.
-\phware is a tele-health application under development to enhance the safety of COVID-19 patients in home care with remote monitoring by clinicians.
-It provides a wearable ring or finger-clip to sense seven vital signs and send them to a smartphone via Bluetooth.
+Our proof-of-technology is illustrated here in a case-study of telehealth augmented by remote patient monitoring (RPM). 
+Although telehealth has rapidly gained acceptance for improving accessibility \cite{Medicare,Mayo,Aalam229} and reducing transmission rates \cite{10.1093/jamia/ocaa048,10.1093/jamia/ocaa067} the remote and asynchronous context of telehealth also introduces a risk that patients' conditions may deteriorae before their physicians can be aware to intervene \cite{10.1097/ALN.0000000000003578}.
+Bionous \phware is an application under development to enhance the telehealth safety of COVID-19 patients with RPM of their vital signs \cite{Phware}.
+
+\phware\ measures and streams seven vital signs: Temperature, Oxygen Saturation, Respiration Rate, Pulse and Pulse variability, and Dia/Systolic Blood Pressures .
+A single \phware ring or finger-clip can be used at home to sense all vital signs in a 60-90 second session, then send them to a smartphone via Bluetooth.
 A smartphone app uploads the sensor data to AI cloud services for storage and machine-learning to assign values to vitals, analyze their trends, and send alerts \cite{Altschul2004PredictiveMI,10.2307/2984877,10.5555/1643031.1643047}.
-A web-based dashboard lets clinicians review vitals' trends and alerts to decide appropriate interventions.
+A web-based dashboard displays the trends and alerts to provide clinicians with \emph{actionable risk awareness} of their outpatients.
+The streaming of vital signs and alerts serve as an early warning system to maintain clinicians’ awareness and prioritize their attention, thereby enhancing home care safety .
 
-The paper details the CWP for \phware, developed in conjunction with clinicians and other experts,\footnote{Ann Marie Kimball, an internationally recognized MD epidemiologist in emerging infectious disease, provided medical advice} that defines actionable risk awareness of patients as a finite state diagram with two dimensions: physiological events and actions for appropriate care of the patient.
-This paper also details the translation of the CWP model into a suite of \emph{Linear Temporal Logic} (LTL) properties that together exactly capture the meaning of the CWP.
-LTL is a first-order predicate calculus that includes the ability to reason about the temporal ordering of events \cite{10.5555/975331}.
-Any viable design for vital sign remote monitoring of COVID-19 patients must verify against each LTL property created by the CWP in order to claim it takes appropriate action relative to patient risk.
-
-The paper then describes the \phware\ workflow model.
-The model includes workflows for clinicians, AI cloud services, and patient-caregivers.
-It details how the workflow models for \phware\ are translated into equivalent \emph{Process Meta-language} (Promela) models for the SPIN model checker \cite{spin}.
+The organization of this paper continues by defining \emph{actionable risk awareness} as the CWP for \phware, developed with clinicians and other experts. \footnote{Ann Marie Kimball, an internationally recognized MD epidemiologist in emerging infectious disease, provided medical advice}
+The CWP is represented as a finite state diagram with two dimensions: physiological events and actions for appropriate care of the patient.
+This paper then details the translation of the finite state model into a suite of \emph{Linear Temporal Logic} (LTL) properties that together exactly capture the meaning of the CWP.
+LTL is a first-order predicate calculus with the ability to reason about the temporal ordering of events \cite{10.5555/975331}.
+Any viable design for vital sign remote monitoring of COVID-19 patients must verify against each LTL property created from the CWP in order to claim it takes appropriate action relative to patient risk.
+The paper then presents the \phware\ system design as workflow modeled in the Business Process Modeling Notation (BPMN) \cite{BPMN} that integrates the activities of clinicians, AI cloud services, and patient-caregivers.
+The design is then translated into equivalent \emph{Process Meta-language} (Promela) models for the SPIN model-checker \cite{spin}.
 This translation includes behavior models for the environment inputs such as patient vitals.
 The paper reports the SPIN verification results.
-All the reported artifacts are available for independent review \cite{repo}.
 
-The intentions of such a detailed case study are to show the viability of CWP augmented workflow modeling with model checking and to motivate the need for automated reasoning in any design environment.
-SPIN worked really well in this application in terms of performance and iterative design analysis.
+All the reported artifacts are available for independent review \cite{repo}.
+The intentions of such a detailed case study are to show the viability of augmenting workflows with CWP for functional integration and model checking, and to illustrate the value for automated reasoning in any design environment.
+SPIN worked effectively and efficiently in this project in terms of performance and iterative design analysis.
 The workflows and CWP revisions were easy to verify when posted, and when SPIN found violations, the accompanying counter-examples provided critical insights to the unexpected, and often overlooked, outcomes common in asynchronous interactions.
 These insights were absolutely necessary for those working on the workflows and those working on the CWP to arrive at the presented final forms.
 The experience of this integrated design process with the model checker makes clear that it is difficult to reliably reason about even simple concurrent systems without a verification tool.

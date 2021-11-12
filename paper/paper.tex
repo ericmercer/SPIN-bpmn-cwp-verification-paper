@@ -1,28 +1,22 @@
-\documentclass[a4paper,twoside]{article}
-
-% For the SCITEPRESS Proceedings
-\usepackage{epsfig}
-\usepackage{subcaption}
-\usepackage{calc}
-\usepackage{amssymb}
-\usepackage{amstext}
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{multicol}
-\usepackage{pslatex}
-\usepackage{apalike}
-\usepackage{SCITEPRESS} 
-
+\documentclass[conference]{IEEEtran}
+% \IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
-\usepackage{amsfonts}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
 \usepackage{url}
 \usepackage{comment}
 \usepackage{listings}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
-\usepackage{graphicx}
 \graphicspath{{./figs/}} 
 \usepackage{paralist}
-
+\usepackage{hyperref}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -60,64 +54,69 @@
 \newcommand{\scitesection}[1]{\section{\uppercase{#1}}}
 
 \begin{document}
+
 \title{
   Model Checking Functional Integration of Human Cognition and Machine Reasoning
 }
 
-\author{
-  \authorname{
-    Eric Mercer\sup{1}\orcidAuthor{0000-0002-2264-2958}, 
-    Keith Butler\sup{2} and 
-    Ali Bahrami\sup{3}
-  }
-  \affiliation{\sup{1}Brigham Young University, Provo UT, USA}
-  \affiliation{\sup{2}BPM+, Seattle WA, USA}
-  \affiliation{\sup{3}Bionous LLC, Kirkland WA, USA}
-  \email{egm@cs.byu.edu, keith.a.butler@gmail.com, abahrami@yahoo.com}
+\author{\IEEEauthorblockN{Eric Mercer}
+\IEEEauthorblockA{\textit{Brigham Young University}//
+Provo UT, USA \\
+0000-0002-2264-2958}
+\and
+\IEEEauthorblockN{Keith Butler}
+\IEEEauthorblockA{\textit{BPM+} \\
+Seattle WA, USA \\
+\url{keith.a.butler@gmail.com}}
+\and
+\IEEEauthorblockN{Ali Bahrami}
+\IEEEauthorblockA{\textit{Bionous LLC} \\
+Kirkland WA, USA \\
+\url{abahrami@yahoo.com}}
 }
 
-\keywords{Model Checking, Business Process Modeling, Model-Based Validation, Model Transformation, Reasoning About Models, Promela, SPIN, Linear Temporal Logic, COVID-19}
+\maketitle
 
-\abstract{
-  \input{abstract}
-}
+\begin{abstract}
+    \input{abstract}
+\end{abstract}
 
-\onecolumn \maketitle \normalsize \setcounter{footnote}{0} \vfill
+\begin{IEEEkeywords}
+    Model Checking, Business Process Modeling, Model-Based Validation, Model Transformation, Reasoning About Models, Promela, SPIN, Linear Temporal Logic, COVID-19
+\end{IEEEkeywords}
 
-\scitesection{Introduction}
+\section{Introduction}
 \input{intro}
 
-\scitesection{CWP of Actionable Risk Awareness}
+\section{CWP of Actionable Risk Awareness}
 \input{cwp}
 
-\scitesection{CWP Translation to LTL}
+\section{CWP Translation to LTL}
 \input{ltl}
 
-\scitesection{Workflow for Functional Integration}
+\section{Workflow for Functional Integration}
 \input{workflow}
 
-\scitesection{BPMN Translation to Promela}
+\section{BPMN Translation to Promela}
 \label{sec:bpmn}
 \input{bpmn}
 
-\scitesection{Environment Model for Verification}
+\section{Environment Model for Verification}
 \label{sec:env}
 \input{env}
 
-\scitesection{SPIN Verification Results}
+\section{SPIN Verification Results}
 \label{sec:results}
 \input{results}
 
-\scitesection{Related Work}
+\section{Related Work}
 \input{rw}
 
-\scitesection{Conclusions and Future Work}
+\section{Conclusions and Future Work}
 \input{conclusion}
 
-\bibliographystyle{apalike}
+\bibliographystyle{IEEEtran}
 {\small 
 \bibliography{paper}}
 
 \end{document}
-
-
