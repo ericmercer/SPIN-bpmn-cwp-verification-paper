@@ -1,10 +1,11 @@
 Functional integration of human cognition and machine reasoning is an industry-wide problem where failure risks health or safety.
-Differences of human and machine functioning obscure conventional integration. 
+Differences in human and machine functioning obscure conventional integration. 
 We introduce cognitive work problems (CWPs) for higher-order unification that enables rigorous functional integration. 
-The CWP then supports model checking to prove correctness of the integrated design. 
-Graphical modeling standards enable user participation: CWPs as finite state machines, and system behavior in BPMN. 
-The state diagram is translated to linear temporal logic (LTL) and the BPMN into Promela. 
-The SPIN model checker then verified that the Promela implemented the LTL correctly. 
+Graphical modeling standards enable user participation: CWPs as finite state machines and system behavior in BPMN. 
+Model checking uses the CWP to prove correctness of the integrated design. 
+Its state diagram is translated to linear temporal logic (LTL) and the BPMN into Promela. 
+The SPIN model checker then verifies if the Promela implements the LTL correctly. 
 The end-to-end method is illustrated on a system that employs AI for remote patient monitoring during COVID-19 home care. 
-The CWP specified the medical problem the design must solve: \emph{actionable risk awareness}. SPIN verified the design can meet its medical purpose to enhance patient safety. 
-Our new method appears general to many critical system domains.
+The CWP specifies the medical problem to solve: \emph{actionable risk awareness}.
+SPIN verifies the design can meet its medical purpose. %to enhance patient safety. 
+The new method appears general to many critical system domains.
