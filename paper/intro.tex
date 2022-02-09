@@ -1,6 +1,6 @@
 This paper introduces a new MBSE method for functional integration and verification of joint human-computer teaming on cognitive tasks. 
-The original contribution to integration is a specification of the abstract, cognitive work problem (CWP) the design must solve \cite{workflowmodel,workcentered,BERRY201615,chi2010}, represented as a declarative, computation independent model \cite{Garrido}.
-The technical neutrality of this cognitive model makes it a shareable object of abstract work which various types of actors can transform, despite vastly different performance properties.
+The original contribution to integration is a specification of the abstract, cognitive work problem (CWP) the design must solve \cite{workflowmodel,workcentered,BERRY201615,chi2010}, represented as a computation independent model \cite{Garrido}.
+The technical neutrality of the CWP makes it a shareable object of abstract work which various types of actors can transform, despite vastly different performance properties.
 Thus, a CWP provides the means to integrate the work of distributed cognitive systems that transform a CWP from its initial state to it required goal state required from the system.
 
 The original contribution to design verification is the (re)use of the CWP as a new evaluation criterion for model-checking to prove the correctness of integrated designs.
@@ -12,7 +12,7 @@ Although telehealth has rapidly gained acceptance for improving accessibility \c
 Bionous \phware is an application under development to enhance the telehealth safety of COVID-19 patients with RPM of their vital signs \cite{Phware}.
 \phware\ measures and streams seven vital signs: temperature, oxygen saturation, respiration rate, pulse and its variability, and dia/systolic blood pressures.
 A single \phware ring or finger-clip can be used at home to sense all vital signs in a 60-90 second session, then send them to a smartphone via Bluetooth.
-A smartphone app uploads the data to AI cloud services for storage and machine-learning to assign numerical values to vitals, analyze their trends, and send alerts \cite{Altschul2004PredictiveMI,10.2307/2984877,10.5555/1643031.1643047}.
+A smartphone app uploads the data to AI cloud services for storage and machine-learning to assign numerical values to vitals, analyze their trends, and send alerts.
 A web-based dashboard displays the trends and alerts to provide clinicians with \emph{actionable risk awareness} of their outpatients.
 The streaming of vital signs and alerts serve as an early warning system to maintain clinicians’ awareness and prioritize their attention, thereby enhancing home care safety.
 
@@ -23,9 +23,4 @@ Any viable design for vital sign RPM of COVID-19 patients must verify against ea
 Section IV presents the \phware\ system design as workflow modeled in the Business Process Modeling Notation (BPMN) \cite{BPMN} that integrates the activities of clinicians, AI cloud services, and patient-caregivers.
 Section V details BPMN translation into equivalent \emph{Process Meta-language} (Promela) models for the SPIN model-checker \cite{spin} includes behavior models for the environment inputs such as patient vitals. 
 The environment model for SPIN verification is described in section VI and the results are reported in section VII.
-All the reported artifacts are available for independent review \cite{repo}.
-The intentions of the detailed case study are to show the viability of augmenting workflows with CWP for functional integration and model checking, and to illustrate the value for automated reasoning in any design environment.
-SPIN worked effectively and efficiently in this project in terms of performance and iterative design analysis.
-The workflows and CWP revisions were easy to verify when posted, and when SPIN found violations, the accompanying counter-examples provided critical insights to the unexpected, and often overlooked, outcomes common in asynchronous interactions.
-These insights were absolutely necessary for those working on the workflows and those working on the CWP to arrive at the presented final forms.
-The experience of this integrated design process with the model checker makes clear that it is difficult to reliably reason about even simple concurrent systems without a verification tool.
+All the reported models and analyses are publicly accessible for independent review \cite{repo}.

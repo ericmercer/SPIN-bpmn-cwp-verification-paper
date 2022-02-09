@@ -8,37 +8,35 @@
 \label{fig:bpmn}
 \end{figure*}
 
-As shown in Fig.2 the \phware\ system design was developed in the \emph{Business Process Model Notation} (BPMN) \cite{BPMN} using the The MATH tool-suite \cite{workflowmodel}.
-It has different colored workflow lanes for clinicians, AI cloud services, and patient-caregivers. \figref{fig:bpmn}.
-The benefits of applying and adapting BPMN to health care informatics are demonstrated by the recent \emph{BPM+} project of the Object Management Group.\footnote{Many thanks to Stephen White for reviewing the workflow and clarifying aspects of the BPMN semantics.}
+Fig.2 shows the \phware\ system design developed in the \emph{Business Process Model Notation} (BPMN) \cite{BPMN} using the The MATH tool-suite \cite{workflowmodel}.
+Fig.2 has different colored workflow lanes for clinicians, AI cloud services, and patient-caregivers. \figref{fig:bpmn}.
+Each lane affects, and is affected by the CWP's states.
+The benefits of adapting BPMN to health care informatics are demonstrated by the recent \emph{BPM+} project of the Object Management Group.\footnote{Many thanks to Stephen White for reviewing the workflow and clarifying aspects of the BPMN semantics.}
 
 Our method for functional integration was adapted from concurrent design engineering in aerospace, where specific tracks for multiple design disciplines coordinate their work by referencing a common physical design artifact \cite{10.1007/978-1-4471-1538-0_9}.
-Each lane affects, and is affected by the CWP's states.
-The technology-neutral CWP is pivotal for integrating abstract, work, and extends the notion of higher-order unification \cite{10.1007/3-540-45685-6_2} to joint, human-computer teaming for cognitive work. 
-In Fig.2 the lanes served as the design tracks, and the CWP is the common work object that their coordinated activity must transform to its goal state.
+The technology-neutral CWP is pivotal for integrating cognitive work, and extends the notion of higher-order unification \cite{10.1007/3-540-45685-6_2} to joint, human-computer teaming. 
+In Fig.2 the lanes served as design tracks, and the CWP as the common work object their coordinated activity must transform to its goal state.
 
 \figref{fig:bpmn} starts in the upper left of the green clinicians' workflow.
-Positive tests get exams in task 01. The bold letters in the workflow correlate to transitions of the CWP in \figref{fig:cwp}.
-If exams find severity need is greater than home care the flow goes to task 03 where the patients get ambulatory care or hospital admission (\textbf{B}).
-A severity need that can be met by home care flows to task 02 that orders home care \textbf({A}/\textbf{F}).
-Discharge criteria include an additional test with a negative result following a recovery period (\textbf{C}).
+Positive test results get exams in task-01. The bold letters in the lanes correlate to transitions of the CWP in \figref{fig:cwp}.
+If exams find severity needs are greater-than home care the flow goes to task 03 where the patients get ambulatory care or hospital admission (\textbf{B}).
+Severity needs that can be met by home care flow to task-02 that orders home care (\textbf{A}/\textbf{F}).
+Discharge criteria include additional tests with negative results following a recovery period (\textbf{C}).
 
-The tan workflow of patient/caregiver begins with task 04, then task 05 repeats recording vitals at provider-ordered times until an exam results in patient discharge, or the patient gets another exam, or expires (\textbf{G}). 
-The raw vitals data are transmitted by the smartphone application to the AI cloud services, represented by the middle, metallic lane. 
+The tan workflow of patient/caregiver begins with task-04, then task-05 repeats recording vitals at ordered times until an exam results in patient discharge, or patient get another exam, or expire (\textbf{G}). 
+The raw vitals data are transmitted by smartphone app to AI cloud services in the middle, metallic lane. The Personal Data Analyzer uses machine-learned algorithms in task-06 to assign numerical vital sign values to the sensor data, then analyze longitudinal vital sign trends.
+A packet of values and trends is sent immediately to the upper-right of the clinicians' green workflow. An elevated risk alert is added if any combination of current/trending values exceed home care capability (\textbf{D}).
 
-The Personal Data Analyzer uses machine-learned algorithms in task 06 to assign numerical vital sign values to the sensor data, and then analyze longitudinal vital sign trends.
-A packet of values and trends is sent immediately to the upper-right of the clinicians' green workflow. An alert of elevated risk is added if any combination of current or trending values exceed home care capability \textbf{D}.
-
-Alerts skip any routine delay for the clinicians' attention in task 07a. The specialized dashboard for clinicians used in tasks 07a/b maintains risk awareness of each outpatient.
-The workflow and user interface were designed to preserve the clinicians' ultimate decision authority.
-The doctor can quickly access the AI reasoning, confirm the current or trending severity justifies the alert, or revise it.
-If alerts are confirmed, task 08a orders an urgent exam.
-An urgent exam may result in orders for ambulatory care or hospital admission (\textbf{E}).
+Alerts skip any routine delay for clinicians' attention in task-07a. A specialized dashboard used in tasks-07a/b provides risk awareness of each patient.
+The workflow and user interface were designed to preserve clinicians' ultimate decision authority.
+They can quickly access AI reasoning, confirm the current/trending severity justifies the alert, or revise it.
+If alerts are confirmed task-08a orders urgent exams.
+Urgent exams may give orders for ambulatory care or hospital admission (\textbf{E}).
 When multiple patients have alerts, providers must prioritize them based on familiarity and professional judgement.
-Providers may also decide trends can be controlled by adjusting orders, such as more frequent vitals reporting or changing medications (\textbf{F}).
-If alerts are dismissed, a routine exam still may be due for scheduling by task 08b, or it may be scheduled to start soon. 
+Clinicians may also decide trends can be controlled by adjusting orders for more frequent vitals or medications e.g., Paxlovid (\textbf{F}).
+Even if alerts are dismissed routine exams still may be already set, or due for scheduling in task-08b. 
 
-The decision gate \textbf{Xor11} at far right is where all exam times are managed.
 For non-alerts, providers review vitals in task 07b when time permits. They may order routine exams that are due to be scheduled by task 08b.
 Alternatively, if clinical judgment deems appropriate, providers may order urgent exams in task 08a.
-All approaching exams, whether urgent or scheduled, flow back to task 01, then are held when all participants arrive.
+The far right decision gate \textbf{Xor11} is where all exam times are managed.
+All approaching exams, whether urgent or scheduled, flow back to task-01, then are held when all participants arrive.
