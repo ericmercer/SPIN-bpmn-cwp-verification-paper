@@ -13,9 +13,9 @@ The full Promela model, with the LTL properties for the CWP, is in a public Gith
 The results for the state properties for \texttt{ptInElevatedRiskHomeCare} with the measured time verifying the entire model is shown in \figref{fig:proof}.
 \end{comment}
 
-Verification takes around three to four minutes on an Intel Core i7 laptop with 16 Gb of RAM. It is not taxing the system in any way. 
+Verification takes three to four minutes on an Intel Core i7 laptop with 16 Gb of RAM. It does not tax the system in any way.
 All the existential properties (i.e., the properties ending with \emph{Exists}) result in an error. The error is the existential witness.
-All the other properties pass with no errors. The output of the script includes not just the error report but the coverage summary of the processes and properties.
+All other properties pass with no errors. The script's output includes not just the error report but the coverage summary of the processes and properties.
 The first two entries pertain to the clinician and patient-caregiver processes. There should never be uncovered states in these processes.
 Uncovered states means that there are unreachable behaviors in the model---not good. The third entry is the property being verified.
 It is not unusual to have uncovered states here when there is no reported error since the error behavior is not found in the model---good.
