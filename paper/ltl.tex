@@ -1,67 +1,56 @@
-The CWP in \figref{fig:cwp} is a finite state machine.
-A finite state machine is a recognized standard in software development for specifications.
-The same is not true for LTL, but LTL, or some variant, is the common language for model checking properties.
-As such, the CWP is translated to a set of system properties about the whole of the CWP and a set of state properties about each individual state of the CWP.
-Together these exactly define the meaning of the CWP in LTL.
-The properties themselves are purposed to be simple and small to mitigate the complexity cost of model checking, since it correlates, roughly, with property size, and to make it easy to reason about the meaning of each individual property and the collective meaning of all the properties. 
+The finite state machine is a recognized standard in software development for specifications, but it is not so for specification in model checking.
+That is temporal logic and in this application, LTL, which is a predicate calculus that can specify temporal orderings.
+As such, the CWP is translated to LTL to be used in model checking.
+The model checking verifies that the \emph{object state}, or the state of the workflow that claims to implement the CWP, conforms to the transitions defined by CWP.
 
-The properties are expressed over atomic propositions with one atomic proposition for each state of the CWP.
-Each atomic proposition is computed from the conditions on its incoming ($I$) and outgoing ($O$) transitions on the associated CWP state as $(\bigwedge_{i \in I}\ i) \wedge \neg(\bigvee_{o \in O}\ o)$.
-So an object state resides in a given CWP state if all the conditions on the incoming transitions of the CWP hold for the object state and none of the conditions on the outgoing transitions of the CWP hold for the object state.
+Atomic propositions are defined to indicate when an object state resides in any particular CWP state.
+Each is computed from incoming ($I$) and outgoing ($O$) transitions on each state as $(\bigwedge_{i \in I}\ i) \wedge \neg(\bigvee_{o \in O}\ o)$: for a state, all the conditions on the incoming transitions hold and none of the conditions on the outgoing transitions hold.
+These atomic propositions must be mutually exclusive, as defined later, to pass verification.
 
-Consider the \emph{Pt in appropriate home care} state in \figref{fig:cwp}. The conjunction of the incoming transitions require
+Consider a simplified definition for the \emph{Pt in appropriate home care} state in \figref{fig:cwp}. The conjunction of the incoming transitions require
 %
 \[
 \begin{array}{l}
-  \mathtt{sevNeed} \le homeCare\ \wedge\ \\
-  \mathtt{orders} = (\mathtt{home}\ \mathrm{with}\ \mathtt{remote}\ \vee \\
+  \mathtt{sevNeed} \le \mathtt{homeCare}\ \wedge\ \\
+  \mathtt{orders} = (\mathtt{home}\ \mathrm{with}\ \mathtt{remote}\ \vee\ 
                     \mathtt{more} \vee \mathtt{adjustedRx})
 \end{array}
 \]
 %
-The negated disjunction of the outgoing transitions require
+And the negated disjunction of the outgoing transitions require
 %
 \[
   \mathtt{orders} \neq \mathtt{discharge} \wedge \mathtt{tndSevNeed} \le \mathtt{homeCare}
 \]
 %
-\noindent These together must by true of the object state for the patient to reside in the \emph{Pt in appropriate home care} state.
-The term \texttt{ptInAppropriateHomeCareState} is the atomic proposition for the state.
-Such an atomic proposition is defined similarly for each of the other states in \figref{fig:cwp}.
+\noindent These together define when the object resides in the \emph{Pt in appropriate home care} state.
 
-\subsection{System Properties}
-There are two system requirements for any CWP.
-The first is that no object state exists that is not covered by one of the states in the CWP (e.g., the CWP states are universally inclusive);
-and the second is that the goal states exists.
-The first property is given by the following atomic proposition and LTL formula.
+The first LTL property for the CWP is that its states must be universally inclusive meaning that the object state must reside, always, in some CWP state:
 %
 {\small
-\begin{lstlisting}[style=myPromela]
-#define inAState  InitState || HospitalState 
- || ptInAppropriateHomeCareState 
- || ptInElevatedRiskHomeCareState
- || ptDischargedState || ptExpiredState
-ltl alwayInAState {(always (inAState))}
+\begin{lstlisting}[style=myPromela,mathescape=true]
+always(   InitState $\vee$ HospitalState 
+        $\vee$ ptInAppropriateHomeCareState 
+        $\vee$ ptInElevatedRiskHomeCareState 
+        $\vee$ ptDischargedState $\vee$ ptExpiredState)
 \end{lstlisting}
 }
 %
-\noindent The property is an invariant over the disjunction of CWP states.
-The object state must \emph{always} be in some known CWP state throughout the entirety of the workflow model execution.
-The meaning of \emph{always} in LTL is that the \texttt{inAState} expression is true in every state along every path of the workflow model.
+\noindent It is an invariant over the disjunction of CWP states.
 
-The second system level property looks for executions ending in the goal states.
-The goal states for the CWP in \figref{fig:cwp} have no outgoing transitions and are the \emph{Pt expired} and \emph{Pt discharged} states.
+The second LTL property is that the object state is able to reach either of the two terminal states in the CWP: \emph{Pt expired} or \emph{Pt discharged}.
+These are states in the CWP with no outgoing transitions.
 %
 {\small
-\begin{lstlisting}[style=myPromela]
-#define fair (((eventually 
-  (   ptDischargedState 
-   || ptExpiredState))))
-ltl fairPathExists {(always (! fair))}
+\begin{lstlisting}[style=myPromela,mathescape=true]
+eventually(ptDischargedState $\vee$ ptExpiredState)
 \end{lstlisting}
 }
 %
-\noindent Here \texttt{fair} is an eventuality that should exist in the workflow.
+\noindent The property is named \texttt{fair} and is an eventuality that should exist in the workflow.
+Its existence is verified with \texttt{\textbf{always} $\neg$fair} which witnesses the existence of \texttt{fair} as a counter example to the property.
+
+\begin{comment}
 The meaning of \emph{eventually} is that at some point in the future of the path currently being considered, there exists a state, where the expression \texttt{(ptDischargedState || ptExpiredState)} is true.
 The property to verify is expressed as an invariant using the \emph{always} operator.
 This invariant \emph{should not hold} in the workflow model (e.g., it should result in a verification error). 
@@ -72,71 +61,64 @@ Claiming that the eventuality \texttt{fair} never holds in any state in any path
 Anytime a property is used on the left-hand side of an implication, then such an existential property should be verified.
 More on this requirement later.
 
-\begin{comment}
 The term \emph{fair} is a reference to the over-approximating nature of the workflow model.
 Indeed, in considering the workflow in \figref{fig:bpmn}, it is possible that a patient is never discharged or that the patient never expires.
 Such a behavior is \emph{not fair} because it is not emblematic of the real world---patients eventually are discharged or expire.
 As such, the property proves the existence of paths in the workflow that end in the goal states, and this same property is used later to restrict verification to only those paths that end in one of goal states thereby excluding from consideration, in verification, any infinite workflow behaviors where the patient never recovers or expires.
 \end{comment}
 
-\subsection{Required State Properties}
-There are three properties checked at each state.
-The first is that the state exists somewhere in the workflow model;
-the second is that the object is never in the state at the same time it is in another state;
-and the third is that only transitions allowed by the CWP are taken.
+The next set of three properties must hold for each CWP state:
+(1) the state is reached by some object state of the workflow;
+(2) the object state is only ever covered by exactly one CWP state;
+and (3) only transitions allowed by the CWP are taken by the object state.
 These are shown by example with the \emph{Pt in appropriate home care state}.
 
-The first state property proves the existence of the state somewhere in the workflow model.
+The first property is the existence of the state somewhere.
 %
 {\small
-\begin{lstlisting}[style=myPromela]
-ltl ptInAppropriateHomeCareExists 
-{(fair implies 
-  (always (! ptInAppropriateHomeCareState)))}
+\begin{lstlisting}[style=myPromela,mathescape=true]
+fair $\implies$ always $\neg$ptInAppropriateHomeCareState
 \end{lstlisting}
 }
 %
-\noindent The property should fail verification because the counter-example is the witness that it does exist.
-Notice the use of \texttt{fair} in the implication in the property.
-If the left side of the implication is false, meaning that the workflow path being considered is not fair (e.g., the patient never recovers nor expires), then the implication is satisfied by definition because it is vacuously true;
-however, if it is a fair path, then that path is checked for the existence of the state.
-An existential property is added to every implication to avoid vacuity.
+\noindent The counter-example is the witness that the object state is reachable on some fair path.
+Recall that a fair path ends in a terminal state.
+The implication is not vacuous because the earlier property witnesses the existence of such a path.
+Vacuity is avoided similarly in other properties as seen next.
 
-The second state property proves the state is mutually exclusive to the other states in the CWP.
+The second property is the object state may only belong to exactly one CWP state.
 %
 {\small
-\begin{lstlisting}[style=myPromela]
-ltl ptInAppropriateHomeCareMutex {
-  (always 
-    (ptInAppropriateHomeCareState implies ((
-         (! InitState) 
-      && (! HospitalState) 
-      && ptInAppropriateHomeCareState 
-      && (! ptInElevatedRiskHomeCareState) 
-      && (! ptDischargedState) 
-      && (! ptExpiredState)))))}
+\begin{lstlisting}[style=myPromela,mathescape=true]
+always( ptInAppropriateHomeCareState $\implies$ 
+  ( $\neg$InitState
+  $\wedge$ $\neg$HospitalState 
+  $\wedge$ ptInAppropriateHomeCareState 
+  $\wedge$ $\neg$ptInElevatedRiskHomeCareState 
+  $\wedge$ $\neg$ptDischargedState 
+  $\wedge$ $\neg$ptExpiredState))
 \end{lstlisting}
 }
 %
-\noindent When the system is in the \emph{Pt in appropriate home care state} state, it cannot be in any of the other CWP states. 
+\noindent When the system is in the \emph{Pt in appropriate home care state} state, it cannot be in any other CWP state too.
+The CWP would need to be modified with additional state if it fails to differentiate object states into unique CWP states.
 
-The third state property proves that only transitions allowed by the CWP are implemented by the workflow.
+The third property is that only transitions allowed by the CWP are implemented by the workflow.
 %
 {\small
-\begin{lstlisting}[style=myPromela]
-ltl ptInAppropriateHomeCareEdges {
-  (fair implies (always 
-    (ptInAppropriateHomeCareState implies (
-      ptInAppropriateHomeCareState until (
-            ptInElevatedRiskHomeCareState
-        ||  ptDischargedState)))))}
+\begin{lstlisting}[style=myPromela,mathescape=true]
+fair $\implies$ 
+  always(ptInAppropriateHomeCareState $\implies$ 
+    (ptInAppropriateHomeCareState until
+      ( ptInElevatedRiskHomeCareState
+      $\vee$ ptDischargedState)))
 \end{lstlisting}
 }
 %
-\noindent Here the workflow stays in the indicated state \emph{until} it transitions to one of the two successor states allowed by the CWP.
-The \emph{until} operator requires that at least one of the states on the right of the operator exists somewhere in the future of the path being considered.
-Those states are either \emph{Pt at elevated risk in home care} or \emph{Pt discharged}.
-The \emph{Pt in appropriate home care state} must be found in every state up to the point where the first state on the right of the operator is found. 
+\noindent Here the object state must remain \emph{until} it transitions to one of the allowed successor states in the CWP.
+In this example those states are either \emph{Pt at elevated risk in home care} or \emph{Pt discharged}.
 
-There are twenty total properties at the end of translation: the two system properties with the three properties for each state in the CWP.
-These must all hold to verify.
+There are twenty total properties at the end of translation of the CWP to LTL.
+Two for inclusiveness and fairness.
+Eighteen for the three properties required by each of the six states in the CWP: the states is reached, no other CWP state covers it, and only allowed transitions leave it.
+All twenty properties must hold for an object state space to implement the CWP correctly.
