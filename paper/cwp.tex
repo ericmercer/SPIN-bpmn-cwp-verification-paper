@@ -7,14 +7,14 @@ They are summarized and represented here as the finite state machine in \figref{
 
 The state machine is composed of the relevant states patients can occupy, their associated risks, and the transition conditions among them. The actions for appropriate care of the patient are a response to physiological events. This specification of a set of transformations on a complex object of work provides clarity, rigor and technical neutrality for actionable risk awareness to be shared by the activities of people and computing in a distributed cognitive system.
 
-In the initial state of \figref{fig:cwp} all patients have tested positive for COVID-19. Patients follow the arc labeled letter-\textbf{B} if exams find their severity needs are greater than home care allows (\emph{sevNeed $>$homeCare}) and are ordered to ambulatory care or hospital admission.
+In the initial state of \figref{fig:cwp} all patients have tested positive for COVID-19. Patients follow the arc labeled letter-\textbf{B} if exams find their severity needs are greater than home care allows ($\mathtt{sevNeed} > \mathtt{homeCare}$) and are ordered to ambulatory care or hospital admission.
 The remaining focus of \figref{fig:cwp} is on patients who qualify for home care, with initial exam findings that are pre-symptomatic, asymptotic, or have mild symptoms without co-morbidities (letter-\textbf{A}).
-They are ordered to home care with RPM of vitals because the treatment capability there is equal-to-or-greater-than the needs of their severity level (\emph{$sevNeed \le homeCare$}).
-In the state \emph{pt n appropriate home care} their vitals are measured at provider-ordered times ordered for analysis and RPM, thereby establishing an key aspect of actionable risk awareness.
+They are ordered to home care with RPM of vitals because the treatment capability there is equal-to-or-greater-than the needs of their severity level ($\mathtt{sevNeed} \le \mathtt{homeCare}$).
+In the state \emph{pt in appropriate home care} their vitals are measured at provider-ordered times ordered for analysis and RPM, thereby establishing an key aspect of actionable risk awareness.
 
-Patients remain in home care until either meeting discharge criteria (letter-\textbf{C}); or the trend of their condition or home care deteriorates \emph{trndSevNeed $>$homeCare} (letter-\textbf{D}) putting them in the state \emph{pt at elevated risk in home care}.
+Patients remain in home care until either meeting discharge criteria (letter-\textbf{C}); or the trend of their condition or home care deteriorates $\mathtt{trndSevNeed} > \mathtt{homeCare}$ (letter-\textbf{D}) putting them in the state \emph{pt at elevated risk in home care}.
 Patients must not remain in this state because it has a direct path of fatality (letter-\textbf{G}).
-A near-future exam must determine if they are ordered to clinical care (letter-\textbf{E}) or whether they can be restored to \emph{$sevNeeds\le homeCare$} with increased RPM or medication for new symptoms (letter-\textbf{F}).
+A near-future exam must determine if they are ordered to clinical care (letter-\textbf{E}) or whether they can be restored to $\mathtt{sevNeed} \le \mathtt{homeCare}$ with increased RPM or medication for new symptoms (letter-\textbf{F}).
 If ordered to ambulatory care or hospital care patients can be discharged \textbf{C}, or expire \textbf{G}.
 
 The Guidelines are an authoritative source, but their translation and summary to a finite state diagram needs review for validation. 
