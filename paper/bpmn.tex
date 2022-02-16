@@ -86,9 +86,10 @@ The first is the \texttt{seconds catch AI} in the clinicians flow and the second
 The frequency with which the model checker activates the \emph{seconds catch AI} element in the clinician flow is not coupled, correlated, or synchronized with task 06.
 That means that the \texttt{putToken(clinicianRecv01Vitals)} could take place several times between \emph{seconds catch AI} consuming a token.
 Ignoring all these consecutive token placements does not affect the choices available to the clinician that are defined in the flow, and it does not affect any property of the CWP.
-The CWP does not mandate that every vital be reviewed;
-rather, it insists that the patient have an exam at some point if at elevated risk.
-That behavior is still a part of the model with the aforementioned implementation.
+The behavior is consistent with the workflow that only says the review happens at some future point.
+
+To be clear, the actual clinician dashboard includes the full history from the AI, but in the verification model, that history is elided by representing it with only the most recent token at the time of the review.
+The actual state used for the following gate is non-deterministic in a way that enables the model checker to consider all possible futures.
 
 At this point of the discussion, it is also worth noting that time is not modeled.
 Any process in the Promela model may undergo an arbitrary, possibly unbounded, delay.
