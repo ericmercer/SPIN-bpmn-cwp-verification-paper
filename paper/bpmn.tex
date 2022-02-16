@@ -1,8 +1,7 @@
 The BPMN to Promela translation maps lanes to processes, uses tokens for activation, and updates the CWP object state and model state as indicated in the workflows.
 Here, the top green clinicians lane and the bottom salmon colored patient-caregiver lane in the workflow model in \figref{fig:bpmn} are processes while the middle lane for the AI cloud server is implicitly modeled by the communication between the two processes.
 In other words, there is a non-deterministic choice in the patient-caregiver process at task 05 to set a value for \texttt{trndSevNeed}, and the Promela semantics, by definition, deliver that value at some point to the clinician process.
-Adding the extra process for the AI cloud server does not affect, or change, this explained basic behavior;
-it only serves to add non-necessary complexity.
+%Adding the extra process for the AI cloud server does not affect, or change, this explained basic behavior; it only serves to add non-necessary complexity.
 
 The clinicians and the patient-caregiver processes have the following structure.
 %
@@ -147,6 +146,6 @@ The end elements such as \texttt{pt expired} in the clinician flow break out of 
 \noindent The actual start for the entire workflow in the clinician task, \texttt{pt + COVID-19}, is not modeled;
 rather, before the do-statement in the process, a token is assigned to the appropriate incoming flow of task 01.
 
-The final Promela model is validated with visual inspection and with the verification results proper.
+The final Promela model was validated with visual inspection and with the verification results, proper.
 The structure of the Promela model itself is purposed to have a one-to-one mapping to the graphical workflow making the visual inspection somewhat trivial but not perfect in that small typos can still disconnect elements.
-The verification though usually produces counter-examples or unexpected results that quickly isolate any such typos.
+The verification, though, usually produces counter-examples or unexpected results that quickly isolate any such typos.

@@ -1,22 +1,22 @@
-This paper introduces a new \emph{model based systems engineering} (MBSE) method for functional integration and verification of joint human-computer teaming on cognitive tasks. 
-The original contribution to integration is a specification of the abstract, cognitive work problem (CWP) the design must solve \cite{workflowmodel,workcentered,BERRY201615,chi2010}, represented as a declarative, computation independent model \cite{Garrido}.
-The technical neutrality of this cognitive model makes it a shareable object of abstract work which various types of actors can transform, despite vastly different performance properties.
-Thus, a CWP provides the means to integrate the work of distributed cognitive systems that transform a CWP from its initial state to it required goal state required from the system.
+This paper introduces a new method of \emph{model based systems engineering} (MBSE) for functional integration and verification of joint human-computer teaming on cognitive tasks. 
+The original contribution to integration is a specification of the abstract, cognitive work problem (CWP) the design must solve \cite{workcentered,BERRY201615,chi2010}, represented as a declarative, computation independent model \cite{Garrido}.
+The technical neutrality of this cognitive model makes it a shareable object of abstract work which different types of actors can transform, despite vastly different performance properties.
+Thus, a CWP provides the means to integrate the work of a distributed cognitive system that transforms a CWP from its initial state to the goal state required from the system.
 
-The original contribution to design verification is the (re)use of the CWP as a new evaluation criterion for model checking to prove the correctness of integrated designs.
+The original contribution to design verification reuses the CWP as a new type of required property for model checking to prove the correctness of integrated designs.
 The capability to integrate human cognition with machine reasoning and then verify design correctness can increase safety and reliability for a wide range of critical systems.
 
-Our proof-of-technology is illustrated by a case-study of telehealth augmented by \emph{remote patient monitoring} (RPM). 
+Our proof-of-technology is illustrated by a case-study of telehealth augmented by \emph{remote patient monitoring} (RPM).
 Although telehealth has rapidly gained acceptance for improving accessibility \cite{Medicare} and reducing transmission rates \cite{10.1093/jamia/ocaa067} the remote and asynchronous context of telehealth also introduces risk that patients' conditions may deteriorate before physicians can be aware and intervene \cite{10.1097/ALN.0000000000003578}.
 
-Bionous \phware is an application under development to enhance the telehealth safety of COVID-19 patients with RPM of their vital signs \cite{Phware}.
+Bionous \phware\textsuperscript{\textregistered} is an application under development to enhance the telehealth safety of COVID-19 patients with RPM of their vital signs \cite{Phware}.
 \phware\ measures and streams seven vital signs: temperature, oxygen saturation, respiration rate, pulse and its variability, and dia/systolic blood pressures.
-A single \phware ring or finger-clip can be used at home to sense all vital signs in a 60-90 second session, and then send them to a smartphone via Bluetooth.
-A smartphone app uploads the data to AI cloud services for storage and machine-learning to assign numerical values to vitals, analyze their trends, and send alerts \cite{Altschul2004PredictiveMI,10.2307/2984877,10.5555/1643031.1643047}.
+A single \phware\ ring or finger-clip can be used at home to sense all vital signs in a 60-90 second session, and then send them to a smartphone via Bluetooth.
+A smartphone app uploads the data to AI cloud services for storage and machine-learning to assign numerical values to vitals, analyze their trends, and send alerts.
 A web-based dashboard displays the trends and alerts to provide clinicians with \emph{actionable risk awareness} of their outpatients.
 The streaming of vital signs and alerts serve as an early warning system to maintain clinicians’ awareness and prioritize their attention, thereby enhancing home care safety.
 
-\secref{sec:cwp} defines \emph{actionable risk awareness} as the CWP for \phware, developed with clinicians and other experts \footnote{Ann Marie Kimball, an internationally recognized MD epidemiologist in emerging infectious disease, provided medical advice}.
+The following section defines \emph{actionable risk awareness} as the CWP for \phware, developed with clinicians and other experts \footnote{Ann Marie Kimball, an internationally recognized MD epidemiologist in emerging infectious disease, provided medical advice}.
 \secref{sec:ltl} details translation of the CWP into \emph{Linear Temporal Logic} (LTL) \cite{10.5555/975331} properties that exactly capture the meaning of the CWP and are suitable for use with a model checker.
 %LTL is a first-order predicate calculus with the ability to reason about the temporal ordering of events \cite{10.5555/975331}.
 %Any viable design for vital sign RPM of COVID-19 patients must verify against each LTL property created from the CWP in order to claim it takes appropriate action relative to patient risk.
@@ -24,7 +24,7 @@ The streaming of vital signs and alerts serve as an early warning system to main
 \secref{sec:bpmn} details the translation of the workflow into an equivalent \emph{Process Meta-language} (Promela) model for the SPIN model-checker \cite{spin} with \secref{sec:env} discussing how the inputs to the workflow are defined.
 The results of the SPIN verification are given in \secref{sec:results}.
 
-The full Promela model, with the LTL properties for the CWP, is in a public Github repository \cite{repo}.
+The original finite state model, the BPMN model, and full Promela model, with the LTL properties for the CWP, are in a public Github repository \cite{repo}.
 The \texttt{README.md} file summarizes its content and how to use SPIN to verify the model. 
 The experience of this integrated design process makes clear the difficulty of reasoning about even simple systems without a verification tool.
 
