@@ -13,7 +13,7 @@ The colored lanes represent the activities of clinicians, AI cloud services, and
 The benefits of adapting BPMN to health care informatics are demonstrated by the recent \emph{BPM+} project of the Object Management Group.\footnote{Many thanks to Stephen White for reviewing the workflow and clarifying aspects of the BPMN semantics.}
 
 Our method for functional integration was adapted from concurrent design engineering in aerospace, where specific tracks for multiple design disciplines coordinate their work by referencing a common physical design artifact \cite{10.1007/978-1-4471-1538-0_9}.
-The technology-neutral CWP is pivotal for integrating cognitive work, and extends the notion of higher-order unification \cite{10.1007/3-540-45685-6_2} to joint, human-computer teaming. The CWP served as the sharable work object for the coordinated activity of clinicians, AI cloud services, and patient-caregivers to transform the CWP to establish and maintain \emph{actionable risk awareness}.
+The technology-neutral CWP is pivotal for integrating cognitive work, and extends the notion of higher-order unification \cite{10.1007/3-540-45685-6_2} to joint, human-computer teaming. The CWP served as the common artifact for concurrent engineering, and the colored lanes as tracks to design the coordinated activity of clinicians, AI cloud services, and patient-caregivers. %to transform the CWP to establish and maintain \emph{actionable risk awareness}.
 
 \figref{fig:bpmn} starts in the upper left of the green clinicians' workflow.
 Positive test results get exams in task-01. The bold letters in the lanes correlate to transitions of the CWP in \figref{fig:cwp}.
@@ -23,7 +23,7 @@ Discharge criteria include additional tests with negative results following a re
 
 The tan workflow of patient/caregiver begins with task-04, then task-05 repeats recording vitals at ordered times until an exam results in patient discharge, or patient get another exam, or expire (\textbf{G}). 
 The raw vitals data are transmitted by smartphone app to AI cloud services in the middle, metallic lane. The Personal Data Analyzer uses machine-learned algorithms in task-06 to assign numerical vital sign values to the sensor data, then analyzes the longitudinal trends of vital signs.
-A packet of values and trends is sent immediately to the upper-right of the clinicians' green workflow. An elevated risk alert is added if any combination of current/trending values exceed home care capability (\textbf{D}).
+A packet of values and trends is sent immediately to the upper-right of the clinicians' green workflow. An elevated risk alert is added if any combination of current/trending values exceed home care capability.
 
 Alerts skip any routine delay for clinicians' attention in task-07a. A specialized dashboard used in tasks-07a/b provides risk awareness of each patient.
 The workflow and user interface were designed to preserve clinicians' ultimate decision authority.

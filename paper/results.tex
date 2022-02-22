@@ -1,4 +1,6 @@
-The full Promela model, with the LTL properties for the CWP, is in a public Github repository \cite{repo}. The \emph{README.md} file in the repository summarizes its content and how to verify the model. The model is divided into three files: the CWP object state, the CWP LTL properties, and the BPMN workflow. A script, \emph{short-verify.sh}, combines the three files to create the Promela model and then runs SPIN on all the properties.
+% The full Promela model, with the LTL properties for the CWP, is in a public Github repository \cite{repo}. 
+% The \emph{README.md} file in the repository summarizes its content and how to verify the model. 
+% The model is divided into three files: the CWP object state, the CWP LTL properties, and the BPMN workflow. A script, \emph{short-verify.sh}, combines the three files to create the Promela model and then runs SPIN on all the properties.
 
 \begin{comment}
 \begin{figure*}[t]
@@ -13,6 +15,7 @@ The full Promela model, with the LTL properties for the CWP, is in a public Gith
 The results for the state properties for \texttt{ptInElevatedRiskHomeCare} with the measured time verifying the entire model is shown in \figref{fig:proof}.
 \end{comment}
 
+As a reminder, the model and properties can be found at \cite{repo}.
 Verification takes three to four minutes on an Intel Core i7 laptop with 16 Gb of RAM. It does not tax the system in any way.
 All the existential properties (i.e., the properties ending with \emph{Exists}) resulted in an error. The error is the existential witness.
 All other properties pass with no errors. The script's output includes not just the error report but the coverage summary of the processes and properties.
