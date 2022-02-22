@@ -101,7 +101,7 @@ publisher = {Future Strategies}
     journal = {Journal of the American Medical Informatics Association},
     volume = {27},
     number = {6},
-    pages = {967-971},
+    pages = {967--971},
     year = {2020},
     month = {05},
     abstract = "{Emergent policy changes related to telemedicine and the Emergency Medical Treatment and Labor Act during the novel coronavirus disease 2019 (COVID-19) pandemic have created opportunities for technology-based clinical evaluation, which serves to conserve personal protective equipment (PPE) and protect emergency providers. We define electronic PPE as an approach using telemedicine tools to perform electronic medical screening exams while satisfying the Emergency Medical Treatment and Labor Act. We discuss the safety, legal, and technical factors necessary for implementing such a pathway. This approach has the potential to conserve PPE and protect providers while maintaining safe standards for medical screening exams in the emergency department for low-risk patients in whom COVID-19 is suspected. }",
@@ -124,7 +124,7 @@ publisher = {Future Strategies}
     journal = {Journal of the American Medical Informatics Association},
     volume = {27},
     number = {6},
-    pages = {957-962},
+    pages = {957--962},
     year = {2020},
     month = {05},
     abstract = "{The novel coronavirus disease-19 (COVID-19) pandemic has altered our economy, society, and healthcare system. While this crisis has presented the U.S. healthcare delivery system with unprecedented challenges, the pandemic has catalyzed rapid adoption of telehealth, or the entire spectrum of activities used to deliver care at a distance. Using examples reported by U.S. healthcare organizations, including ours, we describe the role that telehealth has played in transforming healthcare delivery during the 3 phases of the U.S. COVID-19 pandemic: (1) stay-at-home outpatient care, (2) initial COVID-19 hospital surge, and (3) postpandemic recovery. Within each of these 3 phases, we examine how people, process, and technology work together to support a successful telehealth transformation. Whether healthcare enterprises are ready or not, the new reality is that virtual care has arrived.}",
@@ -140,7 +140,7 @@ publisher = {Future Strategies}
     journal = {Anesthesiology},
     volume = {134},
     number = {2},
-    pages = {262-269},
+    pages = {262--269},
     year = {2021},
     month = {02},
     abstract = "{The Coronavirus infection disease 2019 (COVID-19) pandemic is bringing unprecedented numbers of patients with significant hypoxemia to medical care. It is critical that clinicians caring for hypoxemic patients recognize two facts: (1) it is common for hypoxemia to exist without dyspnea (“silent hypoxia”); and (2) while patients may initially achieve cardiorespiratory compensation to hypoxemia, this compensation can fail precipitously. The spectrum of variability in human responses to hypoxemia is striking, influenced by differences in respiratory drive (the hypoxic ventilatory response) related to age, medications, coexisting diseases and genetic background. Healthy individuals usually respond to acute hypoxemia with dyspnea, but because of hypoxic suppression of dyspnea (hypoxic ventilatory decline) and hypocarbic suppression of dyspnea, profound hypoxemia can be minimally symptomatic (“silent”), or noticed only during exertion. Cardiovascular compensation for hypoxemia is similarly variable, with the normal responses of tachycardia and increased cardiac output limited by age, genetics, and coexisting disease. Failure to compensate for decreased oxygen transport is signaled by lactic acidosis, bradycardia, and decreased cardiac output. The latter may develop rapidly, and all are indicators of impending tissue injury or death from hypoxemia.}",
@@ -190,15 +190,14 @@ howpublished = "\url {https://www.mayoclinichealthsystem.org/hometown-health/spe
 	journal = {Emergency Medicine Journal}
 }
 
-@inbook{workflowmodel,
-author = {Butler KA, Bahrami A, et al. 
-In Zhang & M. Walji (eds.)Better EHR},
+@inproceedings{workflowmodel,
+author = {Butler, Keith and Bahrami, Ali and Schroder, Konrad and Braxton, Melissa and Lyon, Lawrence and Haselkorn, Mark},
 year = {2014},
-month = {01},
 pages = {},
-title = {Advances in Workflow Modeling for Health IT: The Modeling \& Analysis Toolsuite for Healthcare ({MATH})},
-publisher = "Univ of Texas"
-
+title = {Advances in Workflow Modeling for Health {IT}: The Modeling \& Analysis Toolsuite for Healthcare ({MATH})},
+booktitle={Better EHR},
+publisher = "National Center for Cognitive Informatics in Healthcare",
+editor="Zhang, Jiajie and Walji, Muhammad"
 }
 
 @inproceedings{workcentered,
@@ -223,7 +222,7 @@ series = {CHI '07}
 title = {Using conceptual work products of health care to design health IT},
 journal = {Journal of Biomedical Informatics},
 volume = {59},
-pages = {15-30},
+pages = {15--30},
 year = {2016},
 issn = {1532-0464},
 doi = {https://doi.org/10.1016/j.jbi.2015.10.014},
@@ -234,13 +233,21 @@ abstract = {This paper introduces a new, model-based design method for interacti
 }
 
 @inproceedings{chi2010,
-author = {Butler, Keith and Hunt, Ann and Muehleisen, John and Zhang, Jiajie and Huffer, Beth},
+author = {Butler, Keith A. and Hunt, Ann J. and Muehleisen, John and Zhang, Jiajie and Huffer, Beth},
+title = {Ontology Models for Interaction Design: Case Study of Online Support},
 year = {2010},
-month = {01},
-pages = {4525-4540},
-title = {Ontology models for interaction design: case study of online support},
-doi = {10.1145/1753846.1754191}
-
+isbn = {9781605589305},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1753846.1754191},
+doi = {10.1145/1753846.1754191},
+abstract = {We report a case study for online self-support, which illustrates an advanced form of work modeling based on ontology technology. This new method enables a much earlier understanding of the design problem and promotes interdisciplinary design collaboration. A functional prototype was implemented for user testing and showed significant improvement in content discovery.},
+booktitle = {CHI '10 Extended Abstracts on Human Factors in Computing Systems},
+pages = {4525–-4540},
+numpages = {16},
+keywords = {work ontology, task analysis, faceted navigation &amp; search, work-centered design, analysis methods (e.g., information architecture, entity modeling, ontology modeling, task/interaction modeling, representation effect, model-based design methods, interactive problem solving},
+location = {Atlanta, Georgia, USA},
+series = {CHI EA '10}
 }
 
 @inproceedings{Altschul2004PredictiveMI,
@@ -272,7 +279,7 @@ publisher = {Morgan Kaufmann Publishers Inc.},
 address = {San Francisco, CA, USA},
 abstract = {We review accuracy estimation methods and compare the two most common methods crossvalidation and bootstrap. Recent experimental results on artificial data and theoretical re cults in restricted settings have shown that for selecting a good classifier from a set of classifiers (model selection), ten-fold cross-validation may be better than the more expensive leaveone-out cross-validation. We report on a largescale experiment--over half a million runs of C4.5 and a Naive-Bayes algorithm--to estimate the effects of different parameters on these algrithms on real-world datasets. For crossvalidation we vary the number of folds and whether the folds are stratified or not, for bootstrap, we vary the number of bootstrap samples. Our results indicate that for real-word datasets similar to ours, The best method to use for model selection is ten fold stratified cross validation even if computation power allows using more folds.},
 booktitle = {Proceedings of the 14th International Joint Conference on Artificial Intelligence - Volume 2},
-pages = {1137–1143},
+pages = {1137–-1143},
 numpages = {7},
 location = {Montreal, Quebec, Canada},
 series = {IJCAI'95}
@@ -307,7 +314,7 @@ isbn="978-1-4471-1538-0"
   year={2019},
   volume={},
   number={},
-  pages={161-171},
+  pages={161--171},
   doi={10.1109/MODELS.2019.000-5}
   }
 
@@ -318,7 +325,7 @@ isbn="978-1-4471-1538-0"
   year={2015},
   volume={},
   number={},
-  pages={860-865},
+  pages={860--865},
   doi={10.1109/KBEI.2015.7436156}
   }
 
@@ -327,7 +334,7 @@ title = {Improving Translation of Live Sequence Charts to Temporal Logic},
 journal = {Electronic Notes in Theoretical Computer Science},
 volume = {250},
 number = {1},
-pages = {137-152},
+pages = {137--152},
 year = {2009},
 note = {Proceedings of the Seventh International Workshop on Automated Verification of Critical Systems (AVoCS 2007)},
 issn = {1571-0661},
@@ -345,7 +352,7 @@ author = {Kumar, Rahul and Mercer, Eric},
 journal = {Electronic Communications of the European Association of Software Science and Technology ({EASST})},
 volume = {10},
 number = {1},
-pages = {1863-2122},
+pages = {1863--2122},
 year = {2008},
 note = {Electronic Communications of the European Association of Software Science and Technology (EASST)},
 issn = {1571-0661},
@@ -357,7 +364,7 @@ title = {Definition and use of Computation Independent Models in an {MDA}-based 
 journal = {Science of Computer Programming},
 volume = {66},
 number = {1},
-pages = {25-43},
+pages = {25--43},
 year = {2007},
 note = {Special Issue on the 5th International Workshop on System/Software Architectures},
 issn = {0167-6423},
@@ -368,7 +375,7 @@ keywords = {CSCW, Groupware development process, MDA, Ontology, OWL, UML, Enterp
 abstract = {Groupware systems allow users to be part of a shared environment in order to carry out groupwork. Members of a group belong to organizations in which each one fulfils general and specific enterprise objectives. This paper presents a proposal, from the perspective of the CSCW (Computer-Supported Cooperative Work) systems, for modelling enterprise organization and developing groupware applications. This research work focuses on two specific models for the proposal: a conceptual domain model formalized through a domain ontology, and a system model built using a UML-based notation. The second stems from the first and each provides a Computation Independent View (CIV) with different objectives. Respectively, they allow a common vocabulary for knowledge sharing to be established, and organization functional requirements to be specified, particularly those concerning communication, coordination and collaboration. Furthermore, these models are part of a concrete MDA-based development process of groupware applications that is also introduced.}
 }
 
-@inbook{10.1145/1978942.1979311,
+@inproceedings{10.1145/1978942.1979311,
 author = {Billman, Dorrit and Arsintescucu, Lucia and Feary, Michael and Lee, Jessica and Smith, Asha and Tiwary, Rachna},
 title = {Benefits of Matching Domain Structure for Planning Software: The Right Stuff},
 year = {2011},
@@ -376,19 +383,14 @@ isbn = {9781450302289},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
 url = {https://doi.org/10.1145/1978942.1979311},
-abstract = {We investigated the role of domain structure, in designing for software usefulness
-and usability. We ran through the whole application development cycle, in miniature,
-from needs analysis through design, implementation, and evaluation, for planning needs
-of one NASA Mission Control group. Based on our needs analysis, we developed prototype
-software that matched domain structure better than did the legacy system. We compared
-our new prototype to the legacy application in a laboratory, high-fidelity analog
-of the natural planning work. We found large performance differences favoring the
-prototype, which better captured domain structure. Our research illustrates the importance
-of needs analysis (particularly Domain Structure Analysis), and the viability of the
-design process that we are exploring.},
+doi = {10.1145/1978942.1979311},
+abstract = {We investigated the role of domain structure, in designing for software usefulness and usability. We ran through the whole application development cycle, in miniature, from needs analysis through design, implementation, and evaluation, for planning needs of one NASA Mission Control group. Based on our needs analysis, we developed prototype software that matched domain structure better than did the legacy system. We compared our new prototype to the legacy application in a laboratory, high-fidelity analog of the natural planning work. We found large performance differences favoring the prototype, which better captured domain structure. Our research illustrates the importance of needs analysis (particularly Domain Structure Analysis), and the viability of the design process that we are exploring.},
 booktitle = {Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},
-pages = {2521–2530},
-numpages = {10}
+pages = {2521–-2530},
+numpages = {10},
+keywords = {planning, complex work domains, aeroastronautics},
+location = {Vancouver, BC, Canada},
+series = {CHI '11}
 }
 
 @INPROCEEDINGS {10.1007/3-540-45685-6_2,
