@@ -1,5 +1,5 @@
 The finite state machine is a recognized standard in software development for specifications, but it is not so for specification in model checking.
-That is temporal logic and in this application, LTL, which is a predicate calculus that can specify temporal orderings.
+Temporal logic is the recognized standard for model checking specifications, and more specifically for SPIN, it is LTL, which is a predicate calculus that can specify temporal orderings.
 As such, the CWP is translated to LTL for use as the required property in model checking.
 The model checking verifies that the \emph{object state}, or the state of the workflow that claims to implement the CWP, conforms to the transitions defined by CWP.
 
@@ -120,5 +120,5 @@ In this example those states are either \emph{Pt at elevated risk in home care} 
 
 There are twenty total properties at the end of translation of the CWP to LTL.
 Two for inclusiveness and fairness.
-Eighteen for the three properties required by each of the six states in the CWP: the states is reached, no other CWP state covers it, and only allowed transitions leave it.
+Eighteen are for the three properties required by each of the six states in the CWP: the states is reached, no other CWP state covers it, and only allowed transitions leave it.
 All twenty properties must hold for an object state space to implement the CWP correctly.
