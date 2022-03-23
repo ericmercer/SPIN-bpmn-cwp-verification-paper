@@ -15,13 +15,15 @@ The benefits of adapting BPMN to health care informatics are demonstrated by the
 Our method for functional integration was adapted from concurrent design engineering in aerospace, where specific tracks for multiple design disciplines coordinate their work by referencing a common physical design artifact \cite{10.1007/978-1-4471-1538-0_9}.
 The technology-neutral CWP is pivotal for integrating cognitive work, and extends the notion of higher-order unification \cite{10.1007/3-540-45685-6_2} to joint, human-computer teaming. The CWP served as the common artifact for concurrent engineering, and the colored lanes as tracks to design the coordinated activity of clinicians, AI cloud services, and patient-caregivers. %to transform the CWP to establish and maintain \emph{actionable risk awareness}.
 
-\figref{fig:bpmn} starts in the upper left of the green clinicians' workflow.
-Positive test results get exams in task-01. The bold letters in the lanes correlate to transitions of the CWP in \figref{fig:cwp}.
-If exams find comorbidities, or moderate, or severe the flow goes to task-03 where the patients get ambulatory care or hospital admission (\textbf{B}).
+\figref{fig:bpmn} starts in the upper left of the green clinicians' workflow with postive test results that get exams in task-01. 
+The bold letters in the text correlate to transitions of the CWP in \figref{fig:cwp}.
+If exams find comorbidities, or moderate, or severe the flow goes to task-03 where the patients get ambulatory care or hospital admission (\textbf{B}/\textbf{E}).
 Severity needs that can be met by home care flow to task-02 that orders home care (\textbf{A}/\textbf{F}).
-Discharge criteria include additional tests with negative results following a recovery period (\textbf{C}).
 
-The tan workflow of patient/caregiver begins with task-04, then task-05 repeats recording vitals at ordered times until an exam results in patient discharge, or patient get another exam, or expire (\textbf{G}). 
+The tan workflow of home care by patient/caregiver begins with task-04, then task-05 repeats recording vitals at ordered times until a new exam order loops back to task-01, or the patient expires (\textbf{G}). 
+The exam can order more home care (back to task-04) or clinical care (task 03), or discharge (\textbf{C}.
+Discharge requires a negative test following a recovery period.
+
 The raw vitals data are transmitted by smartphone app to AI cloud services in the middle, metallic lane. The Personal Data Analyzer uses machine-learned algorithms in task-06 to assign numerical vital sign values to the sensor data, then analyzes the longitudinal trends of vital signs.
 A packet of values and trends is sent immediately to the upper-right of the clinicians' green workflow. An elevated risk alert is added if any combination of current/trending values exceed home care capability.
 
