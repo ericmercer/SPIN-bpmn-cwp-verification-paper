@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# USAGE: verify.sh <cwp_class_file> <bpmn_file> <cwp_state_file> property1 property2 ...
-#   or   cat properties.txt | xargs verify.sh <bpmn_file> <property_file>
+# USAGE: verify.sh <cwp_state_file> <bpmn_file> <cwp_ltl_file> property1 property2 ...
+#   or   cat properties.txt | xargs verify.sh <cwp_state_file> <bpmn_file> <cwp_ltl_file>
 
 cwp_class_file=${1}
 bpmn_file=${2}
