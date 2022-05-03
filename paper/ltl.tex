@@ -4,7 +4,7 @@ As such, the CWP is translated to LTL for use as the required property in model 
 The model checking verifies that the \emph{object state}, or the state of the workflow that claims to implement the CWP, conforms to the transitions defined by CWP.
 
 Atomic propositions are defined to indicate when an object state resides in any particular CWP state.
-Each is computed from incoming ($I$) and outgoing ($O$) transitions on each state as $(\bigwedge_{i \in I}\ i) \wedge \neg(\bigvee_{o \in O}\ o)$: for a state, all the conditions on the incoming transitions hold and none of the conditions on the outgoing transitions hold.
+Each is computed from incoming ($I$) and outgoing ($O$) transitions on each state as $(\bigvee_{i \in I}\ i) \wedge \neg(\bigvee_{o \in O}\ o)$: for a state, at least one of the conditions on the incoming transitions holds and none of the conditions on the outgoing transitions hold.
 These atomic propositions must be mutually exclusive, as defined later, to pass verification.
 
 Consider a simplified definition for the \emph{Pt in appropriate home care} state in \figref{fig:cwp}. The conjunction of the incoming transitions require
