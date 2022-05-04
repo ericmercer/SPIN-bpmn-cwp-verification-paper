@@ -26,7 +26,7 @@
 /*****************************************************************************/
 #define INIT 255
 #define EXPIRED 254
-#define DISCHARGE 253
+#define DISCHARGE 0
 #define homeCare 2
 
 byte sevNeed = INIT
@@ -39,17 +39,25 @@ byte sevNeed = INIT
 #define isDischargeLevel(sevNeed) (sevNeed == DISCHARGE)
 #define setDischargeLevel(sevNeed) sevNeed = DISCHARGE
 
-#define isWithinHomeCare(sevNeed) (sevNeed <= homeCare)
+#define isWithinHomeCare(sevNeed) (    (sevNeed <= homeCare)        \
+                                     && !isInit(sevNeed)            \
+                                     && !isExpired(sevNeed)         \
+                                     && !isDischargeLevel(sevNeed))
 #define setWithinHomeCare(sevNeed) sevNeed = homeCare
+
+#define isOutsideHomeCare(sevNeed) (    (sevNeed > homeCare)        \
+                                     && !isInit(sevNeed)            \
+                                     && !isExpired(sevNeed)         \
+                                     && !isDischargeLevel(sevNeed))
 #define setOutsideHomeCare(sevNeed) sevNeed = homeCare + 1
 
-#define isRequiresHospital(sevNeed) ((! isWithinHomeCare(sevNeed)) && (! isExpired(sevNeed)))
+#define isRequiresHospital(sevNeed) (isOutsideHomeCare(sevNeed))
 
 inline logSeverity(sevNeed) {
   if
   :: isWithinHomeCare(sevNeed) ->
     printf("* sevNeed = withinHomeCareCapabilities\n")
-  :: (! isWithinHomeCare(sevNeed)) ->
+  :: (isOutsideHomeCare(sevNeed)) ->
     printf("* sevNeed = outsideHomeCareCapabilities\n")
   :: isInit(sevNeed) ->
     printf("* sevNeed = INIT\n")
@@ -72,7 +80,7 @@ inline logTrend(trndSevNeed) {
   if
   :: isWithinHomeCare(trndSevNeed) ->
     printf("* trndsevNeed = withinHomeCareCapabilities\n")
-  :: (! isWithinHomeCare(trndSevNeed)) ->
+  :: (isOutsideHomeCare(trndSevNeed)) ->
     printf("* trndSevNeed = outsideHomeCareCapabilities\n")
   :: isInit(trndSevNeed) ->
     printf("* trndSevNeed = INIT\n")
@@ -127,17 +135,21 @@ byte ptInElevatedRiskHomeCareState = 0
 byte ptDischargedState = 0
 byte ptExpiredState = 0
 
-#define edgeA (isWithinHomeCare(sevNeed) && isHomeCare(orders))
-#define edgeB ((! isWithinHomeCare(sevNeed)) && isHospital(orders))
+#define edgeA (isWithinHomeCare(sevNeed) && isHomeCare(orders) && (sevNeed == trndSevNeed))
+#define edgeB (isOutsideHomeCare(sevNeed) && isHospital(orders))
 #define edgeC meetsDischargeCriteria(sevNeed, orders)
-#define edgeD (! isWithinHomeCare(trndSevNeed))
-#define edgeE (! isWithinHomeCare(sevNeed))
-#define edgeF (isWithinHomeCare(sevNeed) && isHomeCarePlus(orders))
+#define edgeD (isOutsideHomeCare(trndSevNeed) && (sevNeed != trndSevNeed))
+#define edgeE (isOutsideHomeCare(sevNeed) && isHospital(orders))
+#define edgeF (isWithinHomeCare(sevNeed) && isHomeCarePlus(orders) && (sevNeed == trndSevNeed))
 #define edgeG (isExpired(sevNeed))
+#define edgeH (isNone(orders))
 
 inline updateState() {
   atomic {
-    InitState = (! (edgeA || edgeB))
+    InitState = 
+      (    (edgeH)
+        && (! (edgeA || edgeB))
+      )
     HospitalState = 
       (    (edgeB || edgeE)
         && (! (edgeC || edgeG))
@@ -152,27 +164,61 @@ inline updateState() {
       )
     ptDischargedState = edgeC
     ptExpiredState = edgeG
-
-    printf("*********************************************\n")
-    if
-    :: (InitState) -> 
-      printf("* InitState\n")
-    :: (HospitalState) -> 
-      printf("* HospitalState\n")
-    :: (ptInAppropriateHomeCareState) -> 
-      printf("* ptInAppropriateHomeCareState\n")
-    :: (ptInElevatedRiskHomeCareState) -> 
-      printf("* ptInElevatedRiskHomeCareState\n")
-    :: (ptDischargedState) -> 
-      printf("* ptDischarged\n")
-    :: (ptExpiredState) -> 
-      printf("* ptExpired\n")
-    :: else -> printf("ERROR: not in a state\n") 
-               assert(false)
-    fi
-    logSeverity(sevNeed)
-    logTrend(trndSevNeed)
-    logOrders(orders)
-    printf("*********************************************\n")
+    logState()
   }
+}
+
+inline logState() {
+  printf("*********************************************\n")
+  if
+  :: (InitState) -> 
+    printf("* InitState\n")
+  :: else
+  fi
+  
+  if
+  :: (HospitalState) -> 
+    printf("* HospitalState\n")
+  :: else
+  fi
+
+  if
+  :: (ptInAppropriateHomeCareState) -> 
+    printf("* ptInAppropriateHomeCareState\n")
+  :: else
+  fi
+
+  if
+  :: (ptInElevatedRiskHomeCareState) -> 
+    printf("* ptInElevatedRiskHomeCareState\n")
+  :: else
+  fi
+
+  if
+  :: (ptDischargedState) -> 
+    printf("* ptDischarged\n")
+  :: else
+  fi
+
+  if
+  :: (ptExpiredState) -> 
+    printf("* ptExpired\n")
+  :: else
+  fi
+  logEdges()
+  logSeverity(sevNeed)
+  logTrend(trndSevNeed)
+  logOrders(orders)
+  printf("*********************************************\n")
+}
+
+inline logEdges() {
+  printf("* edgeA = %d\n", edgeA)
+  printf("* edgeB = %d\n", edgeB)
+  printf("* edgeC = %d\n", edgeC)
+  printf("* edgeD = %d\n", edgeD)
+  printf("* edgeE = %d\n", edgeE)
+  printf("* edgeF = %d\n", edgeF)
+  printf("* edgeG = %d\n", edgeG)
+  printf("* edgeH = %d\n", edgeH)
 }

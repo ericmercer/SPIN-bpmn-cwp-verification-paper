@@ -14,6 +14,11 @@ cat ${cwp_state_file} >> ${combined}
 cat ${bpmn_file} >> ${combined}
 # echo "$file"
 # echo "$@"
+
+# Sanity check for assertion violations
+spin -run -noclaim ${i} -m50000 ${combined} | grep -E "(never claim[[:space:]+])|(errors:)|(of [[:digit:]+])"
+
+# Check each specified property
 for i in "$@"
 do
   spin -run -ltl ${i} -m50000 ${combined} | grep -E "(never claim[[:space:]+])|(errors:)|(of [[:digit:]+])" &

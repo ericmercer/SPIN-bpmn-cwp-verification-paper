@@ -28,8 +28,6 @@ mtype examTime = unscheduled
 #define isExamTimeScheduled(time) (time == scheduled)
 #define setExamTimeScheduled(time) time = scheduled
 
-#define isRoutineExam(trndSevNeed)  (isWithinHomeCare(trndSevNeed))
-
 inline logExamTime(time) {
   printf("examTime = %e\n", time)
 }
@@ -120,24 +118,25 @@ bit patientXor7 = 0
 /*                          Clinician Workflow                               */
 /*****************************************************************************/
 inline clinicianTask01UpdateState() {
-  assert((! isDischargeLevel(sevNeed)) && (! isExpired(sevNeed)))
+  assert(!meetsDischargeCriteria(sevNeed, orders) && !isExpired(sevNeed))
+  
   if
   :: true -> setWithinHomeCare(sevNeed)
     if
-    :: ((! isInit(trndSevNeed)) && (! isWithinHomeCare(trndSevNeed))) -> 
+    :: (!isInit(trndSevNeed) && isOutsideHomeCare(trndSevNeed)) -> 
       setHomeCarePlus(orders)
     :: else -> setHomeCare(orders)
     fi
   :: true -> setOutsideHomeCare(sevNeed)
              setHospital(orders)
-  :: (! isInit(sevNeed)) -> setDischargeCriteria(sevNeed, orders)
+  :: (!isInit(sevNeed)) -> setDischargeCriteria(sevNeed, orders)
   fi 
   trndSevNeed = sevNeed
   updateState()
 }
 
 inline clinicianTask03UpdateState() {
-  assert((! isDischargeLevel(sevNeed)) && (! isExpired(sevNeed)))
+  assert(!meetsDischargeCriteria(sevNeed, orders) && !isExpired(sevNeed))
   if
   :: true -> setExpired(sevNeed)
   :: true -> setDischargeCriteria(sevNeed, orders)
@@ -321,7 +320,7 @@ active proctype clinician() {
       hasToken(clinicianXor5) ->
       consumeToken(clinicianXor5)
       if
-      :: isRequiresHospital(sevNeed) ->
+      :: isOutsideHomeCare(sevNeed) ->
         putToken(clinicianTask03)
       :: meetsDischargeCriteria(sevNeed, orders) ->
         putToken(clinicianEndPtDischarged)
@@ -354,11 +353,11 @@ active proctype clinician() {
         putToken(clinicianXor11In3)
       :: else ->
         if
-        :: (! isRoutineExam(trndSevNeed)) ->
+        :: (isOutsideHomeCare(trndSevNeed)) ->
           putToken(clinicianTask08aIn1)
-        :: (isRoutineExam(trndSevNeed) && isExamTimeUnscheduled(examTime)) ->
+        :: (isWithinHomeCare(trndSevNeed) && isExamTimeUnscheduled(examTime)) ->
           putToken(clinicianTask08bIn0)
-        :: (isRoutineExam(trndSevNeed)) ->
+        :: (isWithinHomeCare(trndSevNeed)) ->
           putToken(clinicianRecv01)
         :: else ->
           printf("ERROR: nothing enabled Xor9\n")
@@ -376,11 +375,11 @@ active proctype clinician() {
         putToken(clinicianXor11In0)
       :: else ->
         if
-        :: (! isRoutineExam(trndSevNeed)) ->
+        :: (isOutsideHomeCare(trndSevNeed)) ->
           putToken(clinicianTask08aIn0)
-        :: (isRoutineExam(trndSevNeed) && isExamTimeUnscheduled(examTime)) ->
+        :: (isWithinHomeCare(trndSevNeed) && isExamTimeUnscheduled(examTime)) ->
           putToken(clinicianTask08bIn1)
-        :: isRoutineExam(trndSevNeed) ->
+        :: isWithinHomeCare(trndSevNeed) ->
           putToken(clinicianRecv01)
         :: else ->
           printf("ERROR: nothing enabled Xor10\n")
@@ -460,7 +459,7 @@ active proctype aICloudServer() {
 /*****************************************************************************/
 inline patientTask06UpdateState() {
   if
-  :: (! isWithinHomeCare(trndSevNeed)) -> 
+  :: (isOutsideHomeCare(trndSevNeed)) -> 
     setExpired(sevNeed)
   :: true
   fi
