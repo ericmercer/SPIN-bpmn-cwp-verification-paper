@@ -16,7 +16,7 @@ cat ${bpmn_file} >> ${combined}
 # echo "$@"
 
 # Sanity check for assertion violations
-spin -run -noclaim ${i} -m50000 ${combined} | grep -E "(never claim[[:space:]+])|(errors:)|(of [[:digit:]+])"
+# spin -run -noclaim ${i} -m50000 ${combined} | grep -E "(never claim[[:space:]+])|(errors:)|(of [[:digit:]+])"
 
 # Check each specified property
 for i in "$@"
