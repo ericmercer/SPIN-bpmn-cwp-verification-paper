@@ -127,9 +127,10 @@ inline clinicianTask01UpdateState() {
       setHomeCarePlus(orders)
     :: else -> setHomeCare(orders)
     fi
-  :: true -> setOutsideHomeCare(sevNeed)
-             setHospital(orders)
-  :: (!isInit(sevNeed)) -> setDischargeCriteria(sevNeed, orders)
+  :: (isInit(sevNeed) || isOutsideHomeCare(trndSevNeed)) -> 
+    setOutsideHomeCare(sevNeed)
+    setHospital(orders)
+  :: (!isInit(sevNeed) && isWithinHomeCare(trndSevNeed)) -> setDischargeCriteria(sevNeed, orders)
   fi 
   trndSevNeed = sevNeed
   updateState()
@@ -411,11 +412,15 @@ active proctype clinician() {
 /*****************************************************************************/
 inline aICloudServerTask06UpdateState() {
   if
-  :: true -> setWithinHomeCare(trndSevNeed)
-  :: true -> setOutsideHomeCare(trndSevNeed)
+  :: meetsDischargeCriteria(sevNeed, orders)
+  :: else ->
     if
-    :: true -> setAlert(alert)
-    :: true
+    :: true -> setWithinHomeCare(trndSevNeed)
+    :: true -> setOutsideHomeCare(trndSevNeed)
+      if
+      :: true -> setAlert(alert)
+      :: true
+      fi
     fi
   fi
   updateState()
@@ -429,6 +434,7 @@ active proctype aICloudServer() {
         clinicianEndPtExpired, patientEndPtExpired1) ->
       break
     }
+
   :: // AI Cloud Server Start113 
     atomic { 
       hasToken(aICloudServerStart113) -> 
