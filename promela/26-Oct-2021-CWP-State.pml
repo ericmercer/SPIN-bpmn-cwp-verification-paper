@@ -1,74 +1,49 @@
 /*****************************************************************************/
-/* This file defines the variables that comprise the "state" of the CWP with */
-/* setters and predicates. The setters give the possible values for each     */
-/* state variable. The predicates reflect the edge conditions seen in the    */
-/* associated state diagram for the CWP.                                     */
-/*                                                                           */
-/* Actionionable Risk Awareness Variables: (sevNeed, trndSevNeed, orders)    */
-/*                                                                           */
-/*   sevNeed: must be assessed and assigned in an exam by a clinician        */
-/*   trndSevNeed: assigned by AI and synchronized with sevNeed in exam       */
-/*   orders: must be assigned by clinician in an exam                        */
-/*                                                                           */
-/* This file then defines the conditions required to reside in a given       */
-/* state of the associated state diagram for the CWP. Each state is defined  */
-/* by the conditions of its incoming and outgoing edges (explained later).   */
-/* There is a global boolean variable for each state in the state diagram.   */
-/* That variable is set whenever its associated state is active.             */
-/*                                                                           */
-/* This file ends with weak behavioral models for each of the state          */
-/* variables. These are intended to put the least constraints necessary      */
-/* on the variables to pass verification by an implementing workflow.        */
+/*                            Doctors Orders                                 */
 /*****************************************************************************/
+mtype = {home, admission, discharge, none}
+mtype orders = none
 
-/*****************************************************************************/
+#define isNone(orders) (orders == none)
+
+#define isHomeCare(orders) (orders == home)
+
+#define setHomeCare(orders) orders = home
+
+#define isHospital(orders) (orders == admission)
+
+#define setHospital(orders) orders = admission
+
+#define isDischarge(orders) (orders == discharge)
+
+#define setDischarge(orders) orders = discharge
+ 
+inline logOrders(orders) {
+  printf("orders = %e\n", orders)
+}
+
+//****************************************************************************/
 /*                         Patient Severity Need                             */
 /*****************************************************************************/
-#define INIT 255
-#define EXPIRED 254
-#define DISCHARGE 0
+
+#define EXPIRED 255
+#define INIT 42
 #define homeCare 2
 
 byte sevNeed = INIT
 
-#define isInit(sevNeed) (sevNeed == INIT)
+#define isINIT(sevNeed) (sevNeed == INIT)
+#define isFatality(sevNeed) (sevNeed == EXPIRED)
 
-#define isExpired(sevNeed) (sevNeed == EXPIRED)
-#define setExpired(sevNeed) sevNeed = EXPIRED
-
-#define isDischargeLevel(sevNeed) (sevNeed == DISCHARGE)
-#define setDischargeLevel(sevNeed) sevNeed = DISCHARGE
-
-#define isWithinHomeCare(sevNeed) (    (sevNeed <= homeCare)        \
-                                     && !isInit(sevNeed)            \
-                                     && !isExpired(sevNeed)         \
-                                     && !isDischargeLevel(sevNeed))
+#define isWithinHomeCare(sevNeed) (sevNeed <= homeCare)
 #define setWithinHomeCare(sevNeed) sevNeed = homeCare
-
-#define isOutsideHomeCare(sevNeed) (    (sevNeed > homeCare)        \
-                                     && !isInit(sevNeed)            \
-                                     && !isExpired(sevNeed)         \
-                                     && !isDischargeLevel(sevNeed))
 #define setOutsideHomeCare(sevNeed) sevNeed = homeCare + 1
+#define setSeverity(sevNeed, value) sevNeed = value
 
-#define isRequiresHospital(sevNeed) (isOutsideHomeCare(sevNeed))
+#define isRequiresHospital(sevNeed) ((! isINIT(sevNeed)) && (! isWithinHomeCare(sevNeed)) && (! isFatality(sevNeed)))
 
 inline logSeverity(sevNeed) {
-  if
-  :: isWithinHomeCare(sevNeed) ->
-    printf("* sevNeed = withinHomeCareCapabilities\n")
-  :: (isOutsideHomeCare(sevNeed)) ->
-    printf("* sevNeed = outsideHomeCareCapabilities\n")
-  :: isInit(sevNeed) ->
-    printf("* sevNeed = INIT\n")
-  :: isExpired(sevNeed) ->
-    printf("* sevNeed = EXPIRED\n")
-  :: isDischargeLevel(sevNeed) ->
-    printf("* sevNeed = DISCHARGE\n")
-  :: else -> 
-    printf("ERROR: unknown sevNeed %d\n", sevNeed)
-    assert(false)
-  fi
+  printf("sevNeed = %d\n", sevNeed)
 }
 
 /*****************************************************************************/
@@ -77,46 +52,8 @@ inline logSeverity(sevNeed) {
 byte trndSevNeed = INIT
 
 inline logTrend(trndSevNeed) {
-  if
-  :: isWithinHomeCare(trndSevNeed) ->
-    printf("* trndsevNeed = withinHomeCareCapabilities\n")
-  :: (isOutsideHomeCare(trndSevNeed)) ->
-    printf("* trndSevNeed = outsideHomeCareCapabilities\n")
-  :: isInit(trndSevNeed) ->
-    printf("* trndSevNeed = INIT\n")
-  :: isExpired(trndSevNeed) ->
-    printf("* trndSevNeed = EXPIRED\n")
-  :: isDischargeLevel(trndSevNeed) ->
-    printf("* trndSevNeed = DISCHARGE\n")
-  :: else -> 
-    printf("ERROR: unknown trndSevNeed %d\n", trndSevNeed)
-    assert(false)
-  fi
+  printf("trendSeverity = %d\n", trndSevNeed)
 }
-
-/*****************************************************************************/
-/*                            Doctors Orders                                 */
-/*****************************************************************************/
-mtype = {home, homePlus, admission, discharge, none}
-mtype orders = none
-
-#define isNone(orders) (orders == none)
-#define isHomeCare(orders) (orders == home)
-#define isHomeCarePlus(orders) (orders == homePlus)
-#define isHospital(orders) (orders == admission)
-#define isDischarge(orders) (orders == discharge)
-
-#define setHomeCare(orders) orders = home
-#define setHomeCarePlus(orders) orders = homePlus
-#define setHospital(orders) orders = admission
-#define setDischarge(orders) orders = discharge
- 
-inline logOrders(orders) {
-  printf("* orders = %e\n", orders)
-}
-
-#define meetsDischargeCriteria(sevNeed, orders) (isDischargeLevel(sevNeed) && isDischarge(orders))
-#define setDischargeCriteria(sevNeed, orders) setDischargeLevel(sevNeed) ; setDischarge(orders)
 
 /*****************************************************************************/
 /*                            26-Oct-2021-CWP.png                             */
@@ -135,90 +72,81 @@ byte ptInElevatedRiskHomeCareState = 0
 byte ptDischargedState = 0
 byte ptExpiredState = 0
 
-#define edgeA (isWithinHomeCare(sevNeed) && isHomeCare(orders) && (sevNeed == trndSevNeed))
-#define edgeB (isOutsideHomeCare(sevNeed) && isHospital(orders))
-#define edgeC meetsDischargeCriteria(sevNeed, orders)
-#define edgeD (isOutsideHomeCare(trndSevNeed) && (sevNeed != trndSevNeed))
-#define edgeE (isOutsideHomeCare(sevNeed) && isHospital(orders))
-#define edgeF (isWithinHomeCare(sevNeed) && isHomeCarePlus(orders) && (sevNeed == trndSevNeed))
-#define edgeG (isExpired(sevNeed))
-#define edgeH (isNone(orders))
-
 inline updateState() {
   atomic {
-    InitState = 
-      (    (edgeH)
-        && (! (edgeA || edgeB))
-      )
+    InitState = isNone(orders)
     HospitalState = 
-      (    (edgeB || edgeE)
-        && (! (edgeC || edgeG))
+      (    isRequiresHospital(sevNeed)
+        && isHospital(orders)
       )
     ptInAppropriateHomeCareState = 
-      (    (edgeA || edgeF)
-        && (! (edgeC || edgeD))
+      (    (! isRequiresHospital(sevNeed))
+        && isHomeCare(orders)
+        && isWithinHomeCare(sevNeed)
+        && isWithinHomeCare(trndSevNeed)
       )
     ptInElevatedRiskHomeCareState =
-      (    edgeD
-        && (! (edgeE || edgeF || edgeG))
+      (    (! isRequiresHospital(sevNeed))
+        && isHomeCare(orders)
+        && isWithinHomeCare(sevNeed)
+        && (! isWithinHomeCare(trndSevNeed))
       )
-    ptDischargedState = edgeC
-    ptExpiredState = edgeG
-    logState()
+    ptDischargedState = isDischarge(orders)
+    ptExpiredState = isFatality(sevNeed)
   }
 }
 
-inline logState() {
-  printf("*********************************************\n")
+/*****************************************************************************/
+/*                    Behavior Model for Patient Severity                    */
+/*****************************************************************************/
+inline updatePatientSeverity(trndSevNeed, sevNeed) {
   if
-  :: (InitState) -> 
-    printf("* InitState\n")
-  :: else
-  fi
-  
-  if
-  :: (HospitalState) -> 
-    printf("* HospitalState\n")
-  :: else
-  fi
-
-  if
-  :: (ptInAppropriateHomeCareState) -> 
-    printf("* ptInAppropriateHomeCareState\n")
-  :: else
-  fi
-
-  if
-  :: (ptInElevatedRiskHomeCareState) -> 
-    printf("* ptInElevatedRiskHomeCareState\n")
-  :: else
-  fi
-
-  if
-  :: (ptDischargedState) -> 
-    printf("* ptDischarged\n")
-  :: else
-  fi
-
-  if
-  :: (ptExpiredState) -> 
-    printf("* ptExpired\n")
-  :: else
-  fi
-  logEdges()
+  :: true -> setWithinHomeCare(sevNeed)
+  :: trndSevNeed > homeCare -> setOutsideHomeCare(sevNeed)
+  fi 
+  updateState()
   logSeverity(sevNeed)
-  logTrend(trndSevNeed)
-  logOrders(orders)
-  printf("*********************************************\n")
 }
 
-inline logEdges() {
-  printf("* edgeA = %d\n", edgeA)
-  printf("* edgeB = %d\n", edgeB)
-  printf("* edgeC = %d\n", edgeC)
-  printf("* edgeD = %d\n", edgeD)
-  printf("* edgeE = %d\n", edgeE)
-  printf("* edgeF = %d\n", edgeF)
-  printf("* edgeG = %d\n", edgeG)
-  printf("* edgeH = %d\n", edgeH)
+inline updatePatientMortality(trndSevNeed, sevNeed) {
+  if
+  :: (! isWithinHomeCare(trndSevNeed)) -> 
+    setSeverity(sevNeed, EXPIRED)
+  :: (! isWithinHomeCare(sevNeed)) ->
+    setSeverity(sevNeed, EXPIRED)
+  :: true
+  fi
+  updateState()
+  logSeverity(sevNeed)
+}
+
+/*****************************************************************************/
+/*                     Behavior Model for Severity Trend                     */
+/*****************************************************************************/
+inline updateSeverityTrend(trndSevNeed) {
+  if
+  :: true -> setWithinHomeCare(trndSevNeed)
+  :: true -> setOutsideHomeCare(trndSevNeed)
+  fi
+  updateState()
+  logTrend(trndSevNeed)
+}
+
+/*****************************************************************************/
+/*                     Behavior Model for Doctor Orders                      */
+/*****************************************************************************/
+inline updateDoctorOrders(sevNeed, orders) {
+  if
+  :: (sevNeed > homeCare) ->
+    setHospital(orders)
+  :: else -> 
+    if
+      :: (isNone(orders) || isWithinHomeCare(sevNeed)) ->
+        setHomeCare(orders)
+      :: (!isNone(orders) && isWithinHomeCare(trndSevNeed)) ->
+        setDischarge(orders)
+    fi
+  fi
+  updateState()
+  logOrders(orders)
 }

@@ -14,18 +14,67 @@ inline logAlert(alert) {
 }
 
 /*****************************************************************************/
+/*                          Behavior Model Alert                             */
+/*****************************************************************************/
+inline updateAlert(alert) {
+  if
+  :: true -> setAlert(alert)
+  :: true
+  fi
+
+  logAlert(alert)
+}
+
+/*****************************************************************************/
+/*                                Exam Type                                  */
+/*****************************************************************************/
+mtype = {routine, urgent}
+mtype examType = routine
+
+#define isExamTypeRoutine(type) (type == routine)
+
+#define setExamTypeRoutine(type) type = routine
+
+#define isExamTypeUrgent(type) (type == urgent)
+
+#define setExamTypeUrgent(type) type = urgent
+
+inline logExamType(type) {
+  printf("examType = %e\n", type)
+}
+
+/*****************************************************************************/
+/*                       Behavior Model for Exam Type                        */
+/*****************************************************************************/
+inline updateExamType(trndSevNeed, examType) {
+  clearAlert(alert)
+  if
+  :: (isExamTypeRoutine(examType) && (! isWithinHomeCare(trndSevNeed))) ->
+    if
+    :: true -> setExamTypeUrgent(examType)
+    :: true
+    fi
+  :: else
+  fi
+  logExamType(examType)
+}
+
+/*****************************************************************************/
 /*                                Exam Time                                  */
 /*****************************************************************************/
-mtype = {unscheduled, scheduled, now}
+mtype = {now, unscheduled, scheduled}
 mtype examTime = unscheduled
 
 #define isExamTimeNow(time) (time == now)
+
 #define setExamTimeNow(time) time = now
 
 #define isExamTimeUnscheduled(time) (time == unscheduled)
+
 #define setExamTimeUnscheduled(time) time = unscheduled
 
 #define isExamTimeScheduled(time) (time == scheduled)
+
 #define setExamTimeScheduled(time) time = scheduled
 
 inline logExamTime(time) {
@@ -33,18 +82,29 @@ inline logExamTime(time) {
 }
 
 /*****************************************************************************/
+/*                       Behavior Model for Exam Time                        */
+/*****************************************************************************/
+inline setExamTimeIfScheduled(time) {
+  if
+  :: isExamTimeScheduled(time) ->
+    setExamTimeNow(time)
+  :: true
+  fi
+  logExamTime(time)
+}
+
+/*****************************************************************************/
 /*                         Clinician Flow Places                             */
 /*****************************************************************************/
-bit clinicianEndPtDischarged = 0
-bit clinicianEndPtDischarged1 = 0
+bit clinicianEnd61 = 0
 bit clinicianEndPtExpired = 0
 bit clinicianRecv00In0 = 0
 bit clinicianRecv00In1 = 0
 bit clinicianRecv01 = 0
 bit clinicianRecv01Vitals = 0
-bit clinicianStartPtPlusCOVID = 0
 bit clinicianTask01In0 = 0
 bit clinicianTask01In1 = 0
+bit clinicianTask01In2 = 0
 bit clinicianTask02 = 0
 bit clinicianTask03 = 0
 bit clinicianTask07a = 0
@@ -65,24 +125,17 @@ bit clinicianXor11In2 = 0
 bit clinicianXor11In3 = 0
 
 /*****************************************************************************/
-/*                          AI Cloud Server Flow                             */
+/*                         Home Care Flow Places                             */
 /*****************************************************************************/
-bit aICloudServerStart113 = 0
-bit aICloudServerTask06 = 0
-bit aICloudServerEnd232 = 0
-
-/*****************************************************************************/
-/*                           Patient Flow Places                             */
-/*****************************************************************************/
-bit patientEnd196 = 0
-bit patientEndPtExpired1 = 0
-bit patientStart170 = 0
-bit patientSend00 = 0
-bit patientTask04 = 0
-bit patientTask05In00 = 0
-bit patientTask05In01 = 0
-bit patientXor6 = 0
-bit patientXor7 = 0
+bit homeCareFlowEnd196 = 0
+bit homeCareFlowEndPtExpired = 0
+bit homeCareStart170 = 0
+bit homeCareFlowSend00 = 0
+bit homeCareFlowTask04 = 0
+bit homeCareFlowTask05In00 = 0
+bit homeCareFlowTask05In01 = 0
+bit homeCareFlowXor6 = 0
+bit homeCareFlowXor7 = 0
 
 /*****************************************************************************/
 /*                             Token Management                              */
@@ -117,225 +170,127 @@ bit patientXor7 = 0
 /*****************************************************************************/
 /*                          Clinician Workflow                               */
 /*****************************************************************************/
-inline clinicianTask01UpdateState() {
-  assert(!meetsDischargeCriteria(sevNeed, orders) && !isExpired(sevNeed))
-  
-  if
-  :: true -> setWithinHomeCare(sevNeed)
-    if
-    :: (!isInit(trndSevNeed) && isOutsideHomeCare(trndSevNeed)) -> 
-      setHomeCarePlus(orders)
-    :: else -> setHomeCare(orders)
-    fi
-  :: (isInit(sevNeed) || isOutsideHomeCare(trndSevNeed)) -> 
-    setOutsideHomeCare(sevNeed)
-    setHospital(orders)
-  :: (!isInit(sevNeed) && isWithinHomeCare(trndSevNeed)) -> setDischargeCriteria(sevNeed, orders)
-  fi 
-  trndSevNeed = sevNeed
-  updateState()
-}
-
-inline clinicianTask03UpdateState() {
-  assert(!meetsDischargeCriteria(sevNeed, orders) && !isExpired(sevNeed))
-  if
-  :: true -> setExpired(sevNeed)
-  :: true -> setDischargeCriteria(sevNeed, orders)
-  fi 
-  trndSevNeed = sevNeed
-  updateState()
-}
-
-inline clinicianTask07aUpdateState() {
-  clearAlert(alert)
-  if
-  :: isExamTimeScheduled(examTime) ->
-    setExamTimeNow(examTime)
-  :: true
-  fi
-}
-
-inline clinicianTask07bUpdateState() {
-  clearAlert(alert)
-  if
-  :: isExamTimeScheduled(examTime) ->
-    setExamTimeNow(examTime)
-  :: true
-  fi
-}
-
-inline clinicianTask08aUpdateState() {
-  setExamTimeNow(examTime)
-}
-
-inline clinicianTask08bUpdateState() {
-  setExamTimeScheduled(examTime)
-}
-
 active proctype clinician() {
-  putToken(clinicianStartPtPlusCOVID)
+  updateState()
+  putToken(clinicianTask01In0)
   do
-  :: // ADDITIONAL: Patient Expired at Home
+  :: hasToken(clinicianEnd61) ->
     atomic {
-      hasToken(patientEndPtExpired1) ->
       break
     }
-
-  :: // Clinician pt discharged
+  :: hasToken(clinicianEndPtExpired) ->
     atomic {
-      hasToken(clinicianEndPtDischarged) ->
       break
     }
-
-  :: // Cinician pt discharged 1
+  :: hasToken(homeCareFlowEndPtExpired) ->
     atomic {
-      hasToken(clinicianEndPtDischarged1) ->
       break
     }
-
-
-  :: // Clinician pt expired
+  :: hasToken2And(clinicianRecv00In0, clinicianRecv00In1) ->
     atomic {
-      hasToken(clinicianEndPtExpired) ->
-      break
-    }
-
-  :: // Seconds catch ex pt
-    atomic {
-      hasToken2And(clinicianRecv00In0, clinicianRecv00In1) ->
       consumeToken(clinicianRecv00In0)
       consumeToken(clinicianRecv00In1)
       putToken(clinicianTask01In1)
     }
-  
-  :: // Seconds catch AI
+   :: hasToken2And(clinicianRecv01, clinicianRecv01Vitals) ->
     atomic {
-      hasToken2And(clinicianRecv01, clinicianRecv01Vitals) ->
       consumeToken(clinicianRecv01)
       consumeToken(clinicianRecv01Vitals)
       putToken(clinicianXor8)
     }
-
-  :: // Clinician pt + COVID-19
+  :: hasToken3Xor(clinicianTask01In0, clinicianTask01In1, clinicianTask01In2) ->
     atomic {
-      hasToken(clinicianStartPtPlusCOVID) ->
-      consumeToken(clinicianStartPtPlusCOVID)
-      putToken(clinicianTask01In0)
-    }
-
-  
-  :: // Clinician Task 01
-    atomic {
-      hasToken2Xor(clinicianTask01In0, clinicianTask01In1) ->
       consumeToken(clinicianTask01In0)
       consumeToken(clinicianTask01In1)
+      consumeToken(clinicianTask01In2)
+      consumeToken(clinicianRecv01Vitals)
       printf("01- Doctor or Nurse examine pt\n")
-      clinicianTask01UpdateState()
+      updatePatientSeverity(trndSevNeed, sevNeed)
+      updateDoctorOrders(sevNeed, orders)
+      setSeverity(trndSevNeed, sevNeed)
+      setExamTimeUnscheduled(examTime)
+      setExamTypeRoutine(examType)
       putToken(clinicianXor5)
     }
-
-  :: // Clinician Task 02
+  :: hasToken(clinicianTask02) ->
     atomic {
-      hasToken(clinicianTask02) ->
       consumeToken(clinicianTask02)
       printf("02- Doctor orders home care with PHWARE and 4-7 day routine exam\n")
+      setExamTypeRoutine(examType)
       putToken(clinicianRecv01)
-      putToken(patientStart170)
+      putToken(homeCareStart170)
     }
-
-  :: // Clinician Task 03
+  :: hasToken(clinicianTask03) ->
     atomic {
-      hasToken(clinicianTask03) ->
       consumeToken(clinicianTask03)
       printf("03- Doctor admit pt to hospital or ICU care\n")
-      clinicianTask03UpdateState()
+      updatePatientMortality(trndSevNeed, sevNeed)
       putToken(clinicianXor4)
     }
-
-  :: // Clinician Task 07a
+  :: hasToken(clinicianTask07a) ->
     atomic {
-      hasToken(clinicianTask07a) ->
       consumeToken(clinicianTask07a)
       printf("07a- Doc-Nurse review alert, vitals and exam schedule\n")
-      clinicianTask07aUpdateState()
+      updateExamType(trndSevNeed, examType)
+      setExamTimeIfScheduled(examTime)
       putToken(clinicianXor9)
     }
-
-  :: // Clinician Task 07b
+  :: hasToken(clinicianTask07b) ->
     atomic {
-      hasToken(clinicianTask07b) ->
       consumeToken(clinicianTask07b)
       printf("07b- Doc-Nurse review vitals and exam schedule\n")
-      clinicianTask07bUpdateState()
+      updateExamType(trndSevNeed, examType)
+      setExamTimeIfScheduled(examTime)
       putToken(clinicianXor10)
     }
-
-  // clinicianTask08aIn0: from Xor10
-  // clinicianTask08aIn1: from Xor09
-  :: // Clinician Task 08a
+  :: hasToken2Xor(clinicianTask08aIn0, clinicianTask08aIn1) ->
     atomic {
-      hasToken2Xor(clinicianTask08aIn0, clinicianTask08aIn1) ->
       consumeToken(clinicianTask08aIn0)
       consumeToken(clinicianTask08aIn1)
       printf("08a- Scheduler sets up urgent exam and informs patient\n")
-      clinicianTask08aUpdateState()
+      setExamTimeNow(examTime)
       putToken(clinicianXor11In1)
     }
-
-  // clinicianTask08bIn0: from Xor09
-  // clinicianTask08bIn1: from Xor10
-  :: // Clinician Task 08b
+  :: hasToken2Xor(clinicianTask08bIn0, clinicianTask08bIn1) ->
     atomic {
-      hasToken2Xor(clinicianTask08bIn0, clinicianTask08bIn1) ->
       consumeToken(clinicianTask08bIn0)
       consumeToken(clinicianTask08bIn1)
       printf("08b- Scheduler schedules routine exam and informs patient\n")
-      clinicianTask08bUpdateState()
+      if
+      :: true -> setExamTimeScheduled(examTime)
+      :: true
+      fi
       putToken(clinicianXor11In2)
     }
-
-  :: // Clinicians Hours Delay
+  :: hasToken(clinicianWait00) ->
     atomic {
-      hasToken(clinicianWait00) ->
       consumeToken(clinicianWait00)
       putToken(clinicianTask07b)
     }
-
-  :: // Clinician Xor4
+  :: hasToken(clinicianXor5) ->
     atomic {
-      hasToken(clinicianXor4) ->
-      consumeToken(clinicianXor4)
-      if
-      :: isExpired(sevNeed) ->
-        putToken(clinicianEndPtExpired)
-      :: (meetsDischargeCriteria(sevNeed, orders)) ->
-        putToken(clinicianEndPtDischarged1)
-      :: else -> 
-        printf("ERROR: nothing enabled Xor4\n")
-        assert(false)
-      fi
-    }
-
-  :: // Clinician Xor5
-    atomic {
-      hasToken(clinicianXor5) ->
       consumeToken(clinicianXor5)
       if
-      :: isOutsideHomeCare(sevNeed) ->
+      :: isRequiresHospital(sevNeed) ->
         putToken(clinicianTask03)
-      :: meetsDischargeCriteria(sevNeed, orders) ->
-        putToken(clinicianEndPtDischarged)
-      :: isWithinHomeCare(sevNeed) ->
-        putToken(clinicianTask02)
+      :: (!isRequiresHospital(sevNeed) && isDischarge(orders)) ->
+        putToken(clinicianEnd61)
       :: else ->
-        printf("ERROR: nothing enabled Xor5\n")
-        assert(false)
+        putToken(clinicianTask02)
       fi
     }
-
-  :: // Clinician Xor8
+  :: hasToken(clinicianXor4) ->
     atomic {
-      hasToken(clinicianXor8) ->
+      consumeToken(clinicianXor4)
+      if
+      :: isFatality(sevNeed) ->
+        putToken(clinicianEndPtExpired)
+      :: else ->
+        putToken(clinicianEnd61)
+      fi
+    }
+  :: hasToken(clinicianXor8) ->
+    atomic {
       consumeToken(clinicianXor8)
       if
       :: isAlert(alert) ->
@@ -344,55 +299,42 @@ active proctype clinician() {
         putToken(clinicianWait00)
       fi
     }
-  
-  :: // Clinician Xor9
+  :: hasToken(clinicianXor9) ->
     atomic {
-      hasToken(clinicianXor9) ->
       consumeToken(clinicianXor9)
       if 
       :: isExamTimeNow(examTime) ->
         putToken(clinicianXor11In3)
       :: else ->
         if
-        :: (isOutsideHomeCare(trndSevNeed)) ->
+        :: isExamTypeUrgent(examType) ->
           putToken(clinicianTask08aIn1)
-        :: (isWithinHomeCare(trndSevNeed) && isExamTimeUnscheduled(examTime)) ->
+        :: isExamTypeRoutine(examType) && isExamTimeUnscheduled(examTime) ->
           putToken(clinicianTask08bIn0)
-        :: (isWithinHomeCare(trndSevNeed)) ->
-          putToken(clinicianRecv01)
         :: else ->
-          printf("ERROR: nothing enabled Xor9\n")
-          assert(false)
+          putToken(clinicianRecv01)
         fi
       fi
     }
-
-  :: // Clinician Xor10
+  :: hasToken(clinicianXor10) ->
     atomic {
-      hasToken(clinicianXor10) ->
       consumeToken(clinicianXor10)
       if 
       :: isExamTimeNow(examTime) ->
         putToken(clinicianXor11In0)
       :: else ->
         if
-        :: (isOutsideHomeCare(trndSevNeed)) ->
+        :: isExamTypeUrgent(examType) ->
           putToken(clinicianTask08aIn0)
-        :: (isWithinHomeCare(trndSevNeed) && isExamTimeUnscheduled(examTime)) ->
+        :: isExamTypeRoutine(examType) && isExamTimeUnscheduled(examTime) ->
           putToken(clinicianTask08bIn1)
-        :: isWithinHomeCare(trndSevNeed) ->
-          putToken(clinicianRecv01)
         :: else ->
-          printf("ERROR: nothing enabled Xor10\n")
-          assert(false)
+          putToken(clinicianRecv01)
         fi
       fi
     }
-
-  :: // Clinician Xor11
+  :: hasToken4Xor(clinicianXor11In0, clinicianXor11In1, clinicianXor11In2, clinicianXor11In3) ->
     atomic {
-      hasToken4Xor(clinicianXor11In0, clinicianXor11In1, clinicianXor11In2, 
-        clinicianXor11In3) ->
       consumeToken(clinicianXor11In0)
       consumeToken(clinicianXor11In1)
       consumeToken(clinicianXor11In2)
@@ -408,147 +350,69 @@ active proctype clinician() {
 }
 
 /*****************************************************************************/
-/*                          AI Cloud Server Workflow                         */
+/*                           Home Care Workflow                              */
 /*****************************************************************************/
-inline aICloudServerTask06UpdateState() {
-  if
-  :: meetsDischargeCriteria(sevNeed, orders)
-  :: else ->
-    if
-    :: true -> setWithinHomeCare(trndSevNeed)
-    :: true -> setOutsideHomeCare(trndSevNeed)
-      if
-      :: true -> setAlert(alert)
-      :: true
-      fi
-    fi
-  fi
-  updateState()
-}
-
-active proctype aICloudServer() {
+active proctype homeCareFlow() {
   do
-  :: // ADDITIONAL: expired are discharged
+  :: (hasToken(clinicianEnd61) || hasToken(clinicianEndPtExpired)) ->
     atomic {
-      hasToken4Xor(clinicianEndPtDischarged, clinicianEndPtDischarged1,
-        clinicianEndPtExpired, patientEndPtExpired1) ->
       break
     }
-
-  :: // AI Cloud Server Start113 
-    atomic { 
-      hasToken(aICloudServerStart113) -> 
-      consumeToken(aICloudServerStart113)
-      putToken(aICloudServerTask06)
-    }
-
-  :: // AI Cloud Server Task 06 
+  :: hasToken(homeCareFlowEnd196) ->
     atomic {
-      hasToken(aICloudServerTask06) ->
-      consumeToken(aICloudServerTask06)
-      printf("06 - PDA analyze vitals\n")
-      aICloudServerTask06UpdateState()
-      putToken(clinicianRecv01Vitals)
-      putToken(aICloudServerEnd232)
+      consumeToken(homeCareFlowEnd196)
     }
-  
-  :: // AI Cloud Server End232
+  :: hasToken(homeCareFlowEndPtExpired) ->
     atomic {
-      hasToken(aICloudServerEnd232) ->
-      consumeToken(aICloudServerEnd232)
-    }
-  od
-}
-
-/*****************************************************************************/
-/*                        Patient - caregiver Workflow                       */
-/*****************************************************************************/
-inline patientTask06UpdateState() {
-  if
-  :: (isOutsideHomeCare(trndSevNeed)) -> 
-    setExpired(sevNeed)
-  :: true
-  fi
-  updateState()
-}
-
-active proctype patient() {
-  do
-  :: // ADDITIONAL: expired or discharged
-    atomic {
-      hasToken3Xor(clinicianEndPtDischarged, clinicianEndPtDischarged1, 
-        clinicianEndPtExpired) ->
       break
     }
-
-  :: // Patient End196
+  :: hasToken(homeCareStart170)
     atomic {
-      hasToken(patientEnd196) ->
-      consumeToken(patientEnd196)
+      consumeToken(homeCareStart170)
+      putToken(homeCareFlowTask04)
     }
-
-  :: // Patient pt expired 1
+  :: hasToken(homeCareFlowSend00) ->
     atomic {
-      hasToken(patientEndPtExpired1) ->
-      break
-    }
-
-  :: // Patient Start170
-    atomic {
-      hasToken(patientStart170) ->
-      consumeToken(patientStart170)
-      putToken(patientTask04)
-    }
-
-  :: // Patient seconds throw pt 
-    atomic {
-      hasToken(patientSend00) ->
-      consumeToken(patientSend00)
+      consumeToken(homeCareFlowSend00)
       putToken(clinicianRecv00In1)
-      putToken(patientEnd196)
+      putToken(homeCareFlowEnd196)
     }
-
-  :: // Patient Task 04
+  :: hasToken(homeCareFlowTask04)
     atomic {
-      hasToken(patientTask04) ->
-      consumeToken(patientTask04)
+      consumeToken(homeCareFlowTask04)
       printf("04- Pt or care-giver get-install Phware\n")
-      putToken(patientTask05In00)
+      putToken(homeCareFlowTask05In00)
     }
-
-  :: // Patient Task 05
+  :: hasToken2Xor(homeCareFlowTask05In00, homeCareFlowTask05In01) ->
     atomic {
-      hasToken2Xor(patientTask05In00, patientTask05In01) ->
-      consumeToken(patientTask05In00)
-      consumeToken(patientTask05In01)
+      consumeToken(homeCareFlowTask05In00)
+      consumeToken(homeCareFlowTask05In01)
       printf("05- Pt or care-giver follow order to record vitals\n")
-      patientTask06UpdateState()
-      putToken(aICloudServerStart113)
-      putToken(patientXor6)
+      updatePatientMortality(trndSevNeed, sevNeed)
+      updateSeverityTrend(trndSevNeed)
+      updateAlert(alert)
+      putToken(clinicianRecv01Vitals)
+      putToken(homeCareFlowXor6)
     }
-
-  :: // Patient Xor6
+  :: hasToken(homeCareFlowXor7) ->
     atomic {
-      hasToken(patientXor6) ->
-      consumeToken(patientXor6)
-      if
-      :: isExpired(sevNeed) ->
-        putToken(patientEndPtExpired1)
-      :: else ->
-        putToken(patientXor7)
-      fi
-    }
-  
-  :: // Patient Xor7
-    atomic {
-      hasToken(patientXor7) ->
-      consumeToken(patientXor7)
+      consumeToken(homeCareFlowXor7)
       if
       :: isExamTimeNow(examTime) ->
-        putToken(patientSend00)
+        putToken(homeCareFlowSend00)
       :: else ->
-        putToken(patientTask05In00)
+        putToken(homeCareFlowTask05In00)
       fi
-    } 
+    }
+  :: hasToken(homeCareFlowXor6) ->
+    atomic {
+      consumeToken(homeCareFlowXor6)
+      if
+      :: isFatality(sevNeed) ->
+        putToken(homeCareFlowEndPtExpired)
+      :: else ->
+        putToken(homeCareFlowXor7)
+      fi
+    }
   od
 }
