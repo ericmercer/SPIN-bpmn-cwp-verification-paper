@@ -35,7 +35,9 @@ The **SYSCON 2022** paper uses this version of the model but with a notable chan
 
 # 16-Feb-2022 Model
 
-Restructured Promela model that adds more logging for debug. It also simplifies the environment model call specific update functions for each task. The environment updates are thus specialized to each task. The structure should make auto-generation of the Promela file easier because the user can add code to only the tasks that need to update the environment, but more specifically, that code is contained in one `inline` macro for the task. Calling a single inline macro has less impact of the BPMN code structure. 
+Restructured Promela model that adds more logging for debug. It also simplifies the environment model call specific update functions for each task. The environment updates are thus specialized to each task. The structure should make auto-generation of the Promela file easier because the user can add code to only the tasks that need to update the environment, but more specifically, that code is contained in one `inline` macro for the task. Calling a single inline macro has less impact of the BPMN code structure.
+
+Another big change in this model is wrapping the conditions inside the `atomic` body for every activation. Previously, the model checker did consider a transition between the activation and the body of the activation. That means it could decide to activate an element, but context switch without executing the body. That context switch between the activation and the body is no longer allowed by the model.
 
 There are two state files for the model as well. The paper is **not** clear on how the states are actually defined. The paper text conjuncts over the input transitions, but that same text gives an example where it disjuncts over the incoming transitions. The intent of the conjunct is actually an intersection: in other words the meet on the lattice where the commonality of the incoming transitions hold. 
 

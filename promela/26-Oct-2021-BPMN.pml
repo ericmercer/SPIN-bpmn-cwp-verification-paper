@@ -208,6 +208,7 @@ active proctype clinician() {
       updatePatientSeverity(trndSevNeed, sevNeed)
       updateDoctorOrders(sevNeed, orders)
       setSeverity(trndSevNeed, sevNeed)
+      updateState()
       setExamTimeUnscheduled(examTime)
       setExamTypeRoutine(examType)
       putToken(clinicianXor5)
